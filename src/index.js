@@ -3,11 +3,12 @@ if (module.hot) module.hot.accept();
 
 import React from 'react';
 import {render} from 'react-dom';
+import styles from './index.less';
 
 class App extends React.Component {
   render() {
     return (
-      <h1>Hello! I'm Friday.</h1>
+      <div id={styles.layout}>Hello! I'm Friday.</div>
     )
   }
 }

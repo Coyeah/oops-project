@@ -9,19 +9,27 @@
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <style>
   html, body, #root {
-    background-color: #F0F2F5;
+    /* background-color: #F0F2F5; */
     height: 100%;
+    width: 100%;
     padding: 0;
     margin: 0;
+  }
+
+  #init-loading-module  {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
   }
   </style>
 </head>
 
 <body>
   <div id="root">
-    <h1 style="text-align: center; padding-top: 100px;">
-      Loading...
-    </h1>
+    <div id="init-loading-module">Loading...</div>
   </div>
 </body>
 

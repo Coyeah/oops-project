@@ -36,37 +36,6 @@ module.exports = {
         },
       ]
     }, {
-      test: /\.(less|css)$/,
-      exclude: /(node_modules)/,
-      use: [
-        {
-          loader: MiniCssExtractPlugin.loader,
-          options: {
-            // you can specify a publicPath here
-            // by default it use publicPath in webpackOptions.output
-            publicPath: '/'
-          }
-        },
-        // 'style-loader',
-        {
-          loader: 'css-loader',
-          options: {
-            // minimize: true, // 使用 css 的压缩功能 // 该版本的 css-loader 移除了 minimize
-            modules: true, // 开启模块化
-            localIdentName: '[name]__[local]___[hash:base64:5]',
-          },
-        },
-        {
-          loader: 'less-loader',
-           options: {
-             modifyVars: {
-               // "@primary-color": '#888',
-             },
-             javascriptEnabled: true,
-           },
-         }
-      ]
-    }, {
       // antd 按需加载 与 css modules 存在冲突。
       // 解决办法：针对于 node_modules 不设置 css modules
       test: /\.(less|css)$/,

@@ -4,6 +4,34 @@ const merge = require('webpack-merge');
 const common = require('./webpack.common.config.js');
 
 module.exports = merge(common, {
+  module: {
+    rules: [
+      {
+        test: /\.(less|css)$/,
+        exclude: /(node_modules)/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              // minimize: true, // 使用 css 的压缩功能 // 该版本的 css-loader 移除了 minimize
+              modules: true, // 开启模块化
+              localIdentName: '[name]__[local]___[hash:base64:5]',
+            },
+          },
+          {
+            loader: 'less-loader',
+             options: {
+               modifyVars: {
+                 // "@primary-color": '#888',
+               },
+               javascriptEnabled: true,
+             },
+           }
+        ]
+      },
+    ]
+  },
   mode: 'development',
   devtool: 'eval-source-map', // 选择一种 source map 格式来增强调试过程。不同的值会明显影响到构建(build)和重新构建(rebuild)的速度。
   devServer: {

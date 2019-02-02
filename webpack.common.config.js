@@ -41,15 +41,7 @@ module.exports = {
       test: /\.(less|css)$/,
       exclude: /(src)/,
       use: [
-        {
-          loader: MiniCssExtractPlugin.loader,
-          options: {
-            // you can specify a publicPath here
-            // by default it use publicPath in webpackOptions.output
-            publicPath: '/'
-          }
-        },
-        // 'style-loader',
+        'style-loader',
         'css-loader',
         {
           loader: 'less-loader',
@@ -120,7 +112,10 @@ module.exports = {
       // both options are optional
       // filename: "[name].css",
       // chunkFilename: "[id].css"
-    })
+    }),
+    new webpack.DefinePlugin({
+      'ENV_MOCK': process.env.MOCK !== 'none'
+    }),
   ],
   optimization: { // webpack4 去掉了 CommonsChunkPlugin，取而代之为 optimization.splitChunks 和 optimization.runtimeChunk 这两个配置。
     // 只在 production 模式下开启，否则禁用的相关配置：

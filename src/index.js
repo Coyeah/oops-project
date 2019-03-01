@@ -10,7 +10,9 @@ class App extends React.Component {
   render() {
     return (
       <div id={styles.layout}>
-        <p>Hello World! I'm Friday.</p>
+        <h1>Oops! Nice meeting you!</h1>
+        <div className={styles.logo} />
+        <p>Please coding in <span>./src/index.js</span>.</p>
       </div>
     )
   }

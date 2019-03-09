@@ -8,11 +8,11 @@ var bundleConfig = require("./bundle.config.json")
 
 module.exports = {
   entry: {
-    vendor: ['react', 'react-dom', 'react-router-dom'],
-    bundle: path.resolve(__dirname + '/src/index.js'),
+    // vendor: ['lodash', 'react-router-dom'],
+    bundle: path.resolve(__dirname,'../src/index.js'),
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, '../dist'),
     filename: '[name].[hash:8].js',
     chunkFilename: '[name].[hash:8].js',
     publicPath: '/',
@@ -92,7 +92,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'oops', // 配置生成的 html 的 title，不会主动替换，需要通过模板引擎语法获取来配置
       filename: 'index.html',
-      template:  path.resolve(__dirname, './src/index.ejs'), // 本地模板文件的位置，支持加载器（如 handlebars、ejs、undersore、html 等）
+      template:  path.resolve(__dirname, '../src/index.ejs'), // 本地模板文件的位置，支持加载器（如 handlebars、ejs、undersore、html 等）
       minify: {  // 用于压缩 html 的配置
         minifyCss: true, // 压缩 html 中出现的 css 代码
         minifyJs: true, // 压缩 html 中出现的 js 代码
@@ -100,12 +100,12 @@ module.exports = {
       dll: bundleConfig.vendor.js,
     }),
     new CopyWebpackPlugin([{
-      from: __dirname + '/public',
+      from: path.resolve(__dirname, '../public'),
     }, {
-      from: __dirname + '/dll',
+      from: path.resolve(__dirname, '../dll'),
     }]),
     new CleanWebpackPlugin(['./dist'], {
-      root:　path.resolve(__dirname, './'), // 绝对路径，就是要根据这个 root 去找要删除的文件夹，默认是这个 webpack 配置文件所在额目录
+      root:　path.resolve(__dirname, '../'), // 绝对路径，就是要根据这个 root 去找要删除的文件夹，默认是这个 webpack 配置文件所在额目录
       verbose: true, // 控制台打印日志
       dry: false, // 为false是删除文件夹的
       watch: true, // 在编译的时候删除打包文件就是在 npm start 或者 npm run dev，等跑本地服务的时候，删除之前的打包文件
@@ -118,7 +118,7 @@ module.exports = {
       // chunkFilename: "[id].css"
     }),
     new webpack.DllReferencePlugin({
-      manifest: require(path.join(__dirname, 'dll', 'manifest.json')),
+      manifest: require(path.resolve(__dirname, '../dll', 'manifest.json')),
     }),
     new webpack.DefinePlugin({
       'ENV_MOCK': process.env.MOCK !== 'none'
@@ -142,12 +142,12 @@ module.exports = {
           enforce: true,
           priority: 20,
         },
-        vendors: {
-          test: 'vendor',
-          name: 'vendor',
-          priority: 10, // 优先级。当需要优先匹配缓存组的规则时为正数，当需要优先匹配默认设置时为负数
-          enforce: true,
-        },
+        // vendors: {
+        //   test: 'vendor',
+        //   name: 'vendor',
+        //   priority: 10, // 优先级。当需要优先匹配缓存组的规则时为正数，当需要优先匹配默认设置时为负数
+        //   enforce: true,
+        // },
         common: {  // 把所有 node_modules 的模块被不同的 chunk 引入超过 1 次的抽取为 common
           test: /[\\/]node_modules[\\/]/,
           name: 'common',

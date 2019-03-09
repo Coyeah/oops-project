@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV === 'development' && ENV_MOCK) {
-  require('../mock/example.js');
+  // require('../mock/example.js');
 }
 
 import React from 'react';

@@ -35,7 +35,7 @@ module.exports = merge(common, {
   mode: 'development',
   devtool: 'eval-source-map', // 选择一种 source map 格式来增强调试过程。不同的值会明显影响到构建(build)和重新构建(rebuild)的速度。
   devServer: {
-    contentBase: path.resolve(__dirname, "dist"), // 本地服务器所加载的页面所在的目录
+    contentBase: path.resolve(__dirname, "../dist"), // 本地服务器所加载的页面所在的目录
      compress: true,  // 开发服务器是否启动gzip等压缩
      port: 9000,  // 端口号
      publicPath: "/", // 此路径下的打包文件可在浏览器中访问。

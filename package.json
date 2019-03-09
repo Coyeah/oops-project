@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf dist/*",
-    "build": "webpack --color --progress --config=webpack.prod.config.js",
-    "dll": "webpack --config=webpack.dll.config.js --mode development",
-    "dev": "webpack-dev-server --config=webpack.dev.config.js",
+    "build": "webpack --color --progress --config=webpack/webpack.prod.config.js",
+    "dll": "webpack --config=webpack/webpack.dll.config.js --mode development",
+    "dev": "webpack-dev-server --config=webpack/webpack.dev.config.js",
     "dev:no-mock": "cross-env MOCK=none npm run dev",
     "start": "npm run dev"
   },
@@ -18,7 +18,7 @@
   },
   "keywords": [],
   "author": "Coyeah",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Coyeah/oops-project/issues"
   },
@@ -62,6 +62,9 @@
   "dependencies": {
     "antd": "^3.12.3",
     "axios": "^0.18.0",
+    "classnames": "^2.2.6",
+    "lodash": "^4.17.11",
+    "prop-types": "^15.7.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-router-dom": "^4.3.1"

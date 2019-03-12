@@ -5,7 +5,7 @@ const common = require('./webpack.common.config.js');
 const paths = require('./config/paths');
 const proxyConfig = require('./config/proxy');
 
-module.exports = merge(common, {
+module.exports = merge(common('development'), {
   mode: 'development',
   devtool: 'eval-source-map', // 选择一种 source map 格式来增强调试过程。不同的值会明显影响到构建(build)和重新构建(rebuild)的速度。
   devServer: {

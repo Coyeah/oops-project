@@ -1,25 +1,26 @@
 const webpack = require('webpack');
 const path = require('path');
+const paths = require('./config/paths');
 const AssetsPlugin = require('assets-webpack-plugin');
 
 module.exports = {
   entry: {
-    vendor: ['react', 'react-dom'],
+    react: ['react'],
+    reactDOM: ['react-dom'],
   },
   output: {
+    path: paths.appDll,
     filename: '[name].dll.js',
-    path: path.resolve(__dirname, '../dll'),
-    library: '_dll_[name]_[hash]',
+    library: '_dll_[name]_library',
   },
   plugins: [
     new webpack.DllPlugin({
-      context: __dirname,
-      name: '_dll_[name]_[hash]',
+      name: '_dll_[name]_library',
       // manifest.json 描述动态链接库包含了哪些内容
-      path: path.join(__dirname, '../dll', 'manifest.json')
+      path: path.resolve(paths.appDll, '[name].manifest.json')
     }),
     new AssetsPlugin({
-      filename: 'bundle.config.json',
+      filename: 'dll.config.json',
       path: path.resolve(__dirname),
     }),
   ],

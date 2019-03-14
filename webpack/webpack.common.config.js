@@ -7,7 +7,9 @@ const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plug
 const CopyWebpackPlugin = require('copy-webpack-plugin'); // 用于直接复制公共的文件
 const paths = require('./config/paths');
 const getStyleLoader = require('./tools/getStyleLoader');
+const getDllReferPlugins = require('./tools/getDllReferPlugins');
 const config = require('./config/config');
+const dllConfig = require('./webpack.dll.config');
 
 const OPEN_SOURCE_MAP = true;
 const isProd = process.env.NODE_ENV === 'production';
@@ -185,14 +187,6 @@ module.exports = {
     new webpack.DefinePlugin({
       'ENV_MOCK': process.env.MOCK !== 'none'
     }),
-    new webpack.DllReferencePlugin({
-      context: paths.appRoot,
-      manifest: require(path.resolve(paths.appDll, 'react.manifest.json')),
-    }),
-    new webpack.DllReferencePlugin({
-      context: paths.appRoot,
-      manifest: require(path.resolve(paths.appDll, 'reactDOM.manifest.json')),
-    }),
     new CopyWebpackPlugin([
       {
         from: paths.appPublic,
@@ -202,6 +196,7 @@ module.exports = {
           from: paths.appDll,
         },
     ].filter(Boolean)),
+    ...getDllReferPlugins(dllConfig.entry),
   ].filter(Boolean),
   node: {
     dgram: "empty",

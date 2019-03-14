@@ -25,9 +25,7 @@ const lessModuleRegex = /\.module\.less$/;
 
 module.exports = {
   context: paths.appRoot,
-  entry: {
-    bundle: paths.appIndex,
-  },
+  entry: [paths.appIndex],
   output: {
     publicPath: paths.PUBLIC_PATH,
     path: paths.appDist,
@@ -35,14 +33,13 @@ module.exports = {
     chunkFilename: '[name].[hash:8].js',
   },
   resolve: {
-    // 删除不必要的后缀自动补全，少了文件后缀的自动匹配，即减少了文件路径查询的工作
-    // 其他文件可以在编码时指定后缀，如 import('./index.scss')
-    extensions: ['.js', '.jsx', '.ts', 'tsx', '.json'],
-    // 避免新增默认文件，编码时使用详细的文件路径，代码会更容易解读，也有益于提高构建速度
-    mainFiles: ['index'],
     alias: {
       "@": path.resolve(paths.appSrc),
     },
+    // 删除不必要的后缀自动补全，少了文件后缀的自动匹配，即减少了文件路径查询的工作
+    // 其他文件可以在编码时指定后缀，如 import('./index.scss')
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
+    // 避免新增默认文件，编码时使用详细的文件路径，代码会更容易解读，也有益于提高构建速度
   },
   module: {
     strictExportPresence: true,

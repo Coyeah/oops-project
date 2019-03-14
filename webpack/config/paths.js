@@ -15,5 +15,5 @@ module.exports = {
   appEjs: resolveApp('src/index.ejs'),
   appPublic: resolveApp('public'),
   appDll: resolveApp('dll'),
-  // appAnalysis: resolve('analysis'),
+  appAnalysis: resolveApp('analysis'),
 };

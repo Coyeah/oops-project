@@ -1,6 +1,6 @@
 {
   "name": "oops-project",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -34,6 +34,11 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
     "@babel/runtime-corejs2": "^7.2.0",
+    "@types/lodash": "^4.14.123",
+    "@types/qs": "^6.5.2",
+    "@types/react": "^16.8.8",
+    "@types/react-dom": "^16.8.2",
+    "@types/react-router-dom": "^4.3.1",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
     "babel-plugin-import": "^1.11.0",
@@ -62,6 +67,7 @@
     "progress-bar-webpack-plugin": "^1.12.1",
     "style-loader": "^0.23.1",
     "terser-webpack-plugin": "^1.2.3",
+    "typescript": "^3.3.3333",
     "url-loader": "^1.1.2",
     "webpack": "^4.28.4",
     "webpack-bundle-analyzer": "^3.1.0",
@@ -71,7 +77,7 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
-    "antd": "^3.12.3",
+    "antd": "^3.15.0",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "history": "^4.7.2",

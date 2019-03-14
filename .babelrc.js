@@ -11,5 +11,11 @@ module.exports = {
     ["@babel/plugin-transform-runtime", { corejs: 2 }],
     ["import", { libraryName: "antd", style: true, }],
     "@babel/plugin-syntax-dynamic-import",
-  ]
+  ],
+  overrides: [  // 把webpack配置文件转义
+    {
+      test: ["./webpack/**/*"],
+      presets: [["@babel/preset-env"]],
+    },
+  ],
 }

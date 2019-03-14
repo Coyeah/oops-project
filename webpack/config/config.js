@@ -1,6 +1,5 @@
 const config = {
-  USE_DLL: false,
-  USE_VENDOR: false,
+  USE_DLL: true,
 };
 
 module.exports = config;

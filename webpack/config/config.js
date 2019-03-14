@@ -1,5 +1,5 @@
 const config = {
-  USE_DLL: true,
+  USE_DLL: false,
   USE_VENDOR: false,
 };
 

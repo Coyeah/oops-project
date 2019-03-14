@@ -10,6 +10,7 @@ const getStyleLoader = require('./tools/getStyleLoader');
 const config = require('./config/config');
 
 const OPEN_SOURCE_MAP = true;
+const isProd = process.env.NODE_ENV === 'production';
 const { USE_DLL } = config;
 
 const REGEXP_SCRIPT = /\.(js|jsx)$/;
@@ -20,203 +21,199 @@ const cssModuleRegex = /\.module\.css$/;
 const lessRegex = /\.less$/;
 const lessModuleRegex = /\.module\.less$/;
 
-module.exports = (mode) => {
-  const isProd = mode === 'production';
-  return {
-    context: paths.appRoot,
-    entry: {
-      bundle: paths.appIndex,
+module.exports = {
+  context: paths.appRoot,
+  entry: {
+    bundle: paths.appIndex,
+  },
+  output: {
+    publicPath: paths.PUBLIC_PATH,
+    path: paths.appDist,
+    filename: '[name].[hash:8].js',
+    chunkFilename: '[name].[hash:8].js',
+  },
+  resolve: {
+    // 删除不必要的后缀自动补全，少了文件后缀的自动匹配，即减少了文件路径查询的工作
+    // 其他文件可以在编码时指定后缀，如 import('./index.scss')
+    extensions: ['.js', '.jsx', '.ts', 'tsx', '.json'],
+    // 避免新增默认文件，编码时使用详细的文件路径，代码会更容易解读，也有益于提高构建速度
+    mainFiles: ['index'],
+    alias: {
+      "@": path.resolve(paths.appSrc),
     },
-    output: {
-      publicPath: paths.PUBLIC_PATH,
-      path: paths.appDist,
-      filename: '[name].[hash:8].js',
-      chunkFilename: '[name].[hash:8].js',
-    },
-    resolve: {
-      // 删除不必要的后缀自动补全，少了文件后缀的自动匹配，即减少了文件路径查询的工作
-      // 其他文件可以在编码时指定后缀，如 import('./index.scss')
-      extensions: ['.js', '.jsx', '.ts', 'tsx', '.json'],
-      // 避免新增默认文件，编码时使用详细的文件路径，代码会更容易解读，也有益于提高构建速度
-      mainFiles: ['index'],
-      alias: {
-        "@": path.resolve(paths.appSrc),
+  },
+  module: {
+    strictExportPresence: true,
+    rules: [{
+      test: REGEXP_SCRIPT,
+      enforce: "pre",
+      include: paths.appSrc,
+      use: {
+        loader: 'eslint-loader',
+        options: { cache: true, quiet: true }
       },
-    },
-    module: {
-      strictExportPresence: true,
-      rules: [{
-        test: REGEXP_SCRIPT,
-        enforce: "pre",
-        include: paths.appSrc,
-        use: {
-          loader: 'eslint-loader',
-          options: { cache: true, quiet: true }
-        },
-      }, {
-        oneOf: [
-          {
-            test: REGEXP_IMAGE,
-            use: [
-              {
-                loader: 'url-loader',
-                options: {
-                  limit: 8192,
-                  name: 'images/[name]-[hash:5].[ext]'
-                }
-              }, {
-                loader: "image-webpack-loader",
-                options: {
-                  mozjpeg: { // 压缩 jpeg 的配置
-                    progressive: true,
-                    quality: 65
-                  },
-                  optipng: { // 使用 imagemin-optipng 压缩 png，enable: false 为关闭
-                    enabled: false,
-                  },
-                  pngquant: { // 使用 imagemin-pngquant 压缩 png
-                    quality: '65-90',
-                    speed: 4
-                  },
-                  gifsicle: { // 压缩 gif 的配置
-                    interlaced: false,
-                  },
-                  webp: { // 开启 webp，会把 jpg 和 png 图片压缩为 webp 格式
-                    quality: 75
-                  },
-                }
-              }
-            ]
-          }, {
-            test: REGEXP_SCRIPT,
-            exclude: /node_modules/,
-            use: ['babel-loader'],
-          }, {
-            test: REGEXP_TYPESCRIPT,
-            exclude: /node_modules/,
-            use: ['babel-loader'],
-          },
-            {
-              test: cssRegex,
-              exclude: cssModuleRegex,
-              use: getStyleLoader({
-                isProd,
-                sourceMap: OPEN_SOURCE_MAP,
-                modules: false,
-              }),
-              sideEffects: true,
-            },
-            {
-              test: cssModuleRegex,
-              exclude: paths.appNodeModules,
-              use: getStyleLoader({
-                isProd,
-                sourceMap: OPEN_SOURCE_MAP,
-                modules: true,
-              }),
-              sideEffects: true,
-            },
-            {
-              test: lessRegex,
-              exclude: lessModuleRegex,
-              use: getStyleLoader({
-                isProd,
-                sourceMap: OPEN_SOURCE_MAP,
-                modules: false,
-                useLess: true,
-              }),
-              sideEffects: true,
-            },
-            {
-              test: lessModuleRegex,
-              exclude: paths.appNodeModules,
-              use: getStyleLoader({
-                isProd,
-                sourceMap: OPEN_SOURCE_MAP,
-                modules: true,
-                useLess: true,
-              }),
-              sideEffects: true,
-            },
-          {
-            exclude: [/\.(js|jsx)$/, /\.(html|ejs)$/, /\.(css|less)$/, /\.json$/],
-            include: paths.appSrc,
-            use: [{
-              loader: 'file-loader',
-              options: {
-                name: 'other/[name].[hash:8].[ext]',
-              },
-            }], // 其他文件
-          }
-        ],
-      }]
-    },
-    plugins: [
-      new HtmlWebpackPlugin({
-        title: 'oops', // 配置生成的 html 的 title，不会主动替换，需要通过模板引擎语法获取来配置
-        filename: 'index.html',
-        inject: true,
-        template:  paths.appEjs, // 本地模板文件的位置，支持加载器（如 handlebars、ejs、undersore、html 等）
-        minify: {  // 用于压缩 html 的配置
-          removeComments: true,
-          collapseWhitespace: true,
-          removeRedundantAttributes: true,
-          useShortDoctype: true,
-          removeEmptyAttributes: true,
-          removeStyleLinkTypeAttributes: true,
-          keepClosingSlash: true,
-          minifyURLs: true,
-          minifyCss: true, // 压缩 html 中出现的 css 代码
-          minifyJs: true, // 压缩 html 中出现的 js 代码
-        },
-        // dll_react: bundleConfig.react.js,
-        // dll_reactDOM: bundleConfig.reactDOM.js,
-      }),
-      USE_DLL &&
-        new HtmlWebpackIncludeAssetsPlugin({
-          assets: [
-            './dll/react.dll.js',
-            './dll/reactDOM.dll.js',
-          ],
-          append: false,
-        }),
-      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),  // IgnorePlugin 防止在 import 或 require 调用时，生成以下正则表达式匹配的模块
-      new ProgressBarPlugin(),
-      new LodashModuleReplacementPlugin({
-        paths: true,
-      }),
-      new webpack.DefinePlugin({
-        'ENV_MOCK': process.env.MOCK !== 'none'
-      }),
-      new webpack.DllReferencePlugin({
-        context: paths.appRoot,
-        manifest: require(path.resolve(paths.appDll, 'react.manifest.json')),
-      }),
-      new webpack.DllReferencePlugin({
-        context: paths.appRoot,
-        manifest: require(path.resolve(paths.appDll, 'reactDOM.manifest.json')),
-      }),
-      new CopyWebpackPlugin([
+    }, {
+      oneOf: [
         {
-          from: paths.appPublic,
+          test: REGEXP_IMAGE,
+          use: [
+            {
+              loader: 'url-loader',
+              options: {
+                limit: 8192,
+                name: 'images/[name]-[hash:5].[ext]'
+              }
+            }, {
+              loader: "image-webpack-loader",
+              options: {
+                mozjpeg: { // 压缩 jpeg 的配置
+                  progressive: true,
+                  quality: 65
+                },
+                optipng: { // 使用 imagemin-optipng 压缩 png，enable: false 为关闭
+                  enabled: false,
+                },
+                pngquant: { // 使用 imagemin-pngquant 压缩 png
+                  quality: '65-90',
+                  speed: 4
+                },
+                gifsicle: { // 压缩 gif 的配置
+                  interlaced: false,
+                },
+                webp: { // 开启 webp，会把 jpg 和 png 图片压缩为 webp 格式
+                  quality: 75
+                },
+              }
+            }
+          ]
+        }, {
+          test: REGEXP_SCRIPT,
+          exclude: /node_modules/,
+          use: ['babel-loader'],
+        }, {
+          test: REGEXP_TYPESCRIPT,
+          exclude: /node_modules/,
+          use: ['babel-loader'],
         },
-        USE_DLL && {
-            from: paths.appDll,
+          {
+            test: cssRegex,
+            exclude: cssModuleRegex,
+            use: getStyleLoader({
+              isProd,
+              sourceMap: OPEN_SOURCE_MAP,
+              modules: false,
+            }),
+            sideEffects: true,
           },
-      ].filter(Boolean)),
-    ].filter(Boolean),
-    node: {
-      dgram: "empty",
-      fs: "empty",
-      net: "empty",
-      tls: "empty",
-      child_process: "empty",
-    },
-    stats: {
-      children: true,
-      modules: true,
-      performance: true,
-    },
-    // webpack v4 相关新特性，中文学习链接：https://beanlee.github.io/posts/blog-translate-webpack-4-mode-and-optimization/
-  };
-}
+          {
+            test: cssModuleRegex,
+            exclude: paths.appNodeModules,
+            use: getStyleLoader({
+              isProd,
+              sourceMap: OPEN_SOURCE_MAP,
+              modules: true,
+            }),
+            sideEffects: true,
+          },
+          {
+            test: lessRegex,
+            exclude: lessModuleRegex,
+            use: getStyleLoader({
+              isProd,
+              sourceMap: OPEN_SOURCE_MAP,
+              modules: false,
+              useLess: true,
+            }),
+            sideEffects: true,
+          },
+          {
+            test: lessModuleRegex,
+            exclude: paths.appNodeModules,
+            use: getStyleLoader({
+              isProd,
+              sourceMap: OPEN_SOURCE_MAP,
+              modules: true,
+              useLess: true,
+            }),
+            sideEffects: true,
+          },
+        {
+          exclude: [/\.(js|jsx)$/, /\.(html|ejs)$/, /\.(css|less)$/, /\.json$/],
+          include: paths.appSrc,
+          use: [{
+            loader: 'file-loader',
+            options: {
+              name: 'other/[name].[hash:8].[ext]',
+            },
+          }], // 其他文件
+        }
+      ],
+    }]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'oops', // 配置生成的 html 的 title，不会主动替换，需要通过模板引擎语法获取来配置
+      filename: 'index.html',
+      inject: true,
+      template:  paths.appEjs, // 本地模板文件的位置，支持加载器（如 handlebars、ejs、undersore、html 等）
+      minify: {  // 用于压缩 html 的配置
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyURLs: true,
+        minifyCss: true, // 压缩 html 中出现的 css 代码
+        minifyJs: true, // 压缩 html 中出现的 js 代码
+      },
+    }),
+    USE_DLL &&
+      new HtmlWebpackIncludeAssetsPlugin({
+        assets: [
+          'react.dll.js',
+          'reactDOM.dll.js',
+        ],
+        append: false,
+      }),
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),  // IgnorePlugin 防止在 import 或 require 调用时，生成以下正则表达式匹配的模块
+    new ProgressBarPlugin(),
+    new LodashModuleReplacementPlugin({
+      paths: true,
+    }),
+    new webpack.DefinePlugin({
+      'ENV_MOCK': process.env.MOCK !== 'none'
+    }),
+    new webpack.DllReferencePlugin({
+      context: paths.appRoot,
+      manifest: require(path.resolve(paths.appDll, 'react.manifest.json')),
+    }),
+    new webpack.DllReferencePlugin({
+      context: paths.appRoot,
+      manifest: require(path.resolve(paths.appDll, 'reactDOM.manifest.json')),
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: paths.appPublic,
+      },
+      USE_DLL &&
+        {
+          from: paths.appDll,
+        },
+    ].filter(Boolean)),
+  ].filter(Boolean),
+  node: {
+    dgram: "empty",
+    fs: "empty",
+    net: "empty",
+    tls: "empty",
+    child_process: "empty",
+  },
+  stats: {
+    children: true,
+    modules: true,
+    performance: true,
+  },
+  // webpack v4 相关新特性，中文学习链接：https://beanlee.github.io/posts/blog-translate-webpack-4-mode-and-optimization/
+};

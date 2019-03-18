@@ -9,6 +9,7 @@ const paths = require('./config/paths');
 const getStyleLoader = require('./tools/getStyleLoader');
 const getDllReferPlugins = require('./tools/getDllReferPlugins');
 const config = require('./config/config');
+const modifyVars = require('./config/theme');
 const dllConfig = require('./webpack.dll.config');
 
 const OPEN_SOURCE_MAP = true;
@@ -101,6 +102,7 @@ module.exports = {
               isProd,
               sourceMap: OPEN_SOURCE_MAP,
               modules: false,
+              modifyVars,
             }),
             sideEffects: true,
           },
@@ -111,6 +113,7 @@ module.exports = {
               isProd,
               sourceMap: OPEN_SOURCE_MAP,
               modules: true,
+              modifyVars,
             }),
             sideEffects: true,
           },
@@ -122,6 +125,7 @@ module.exports = {
               sourceMap: OPEN_SOURCE_MAP,
               modules: false,
               useLess: true,
+              modifyVars,
             }),
             sideEffects: true,
           },
@@ -133,6 +137,7 @@ module.exports = {
               sourceMap: OPEN_SOURCE_MAP,
               modules: true,
               useLess: true,
+              modifyVars,
             }),
             sideEffects: true,
           },

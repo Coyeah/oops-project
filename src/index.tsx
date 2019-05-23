@@ -1,3 +1,5 @@
+// single-ts
+
 if (process.env.NODE_ENV === 'development' && ENV_MOCK) {
   // require('../mock/example.js');
 }

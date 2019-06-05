@@ -5,11 +5,11 @@ const LodashModuleReplacementPlugin = require('lodash-webpack-plugin'); // lodas
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // 引入 html-webpack-plugin 插件,作用是添加模板到编译完成后的 dist 的文件里面，用于生成 html。
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin'); // 用于添加js或css文件路径（例如那些被copy-webpack-plugin插件编译的文件）
 const CopyWebpackPlugin = require('copy-webpack-plugin'); // 用于直接复制公共的文件
-const paths = require('./config/paths');
+const paths = require('../config/paths');
+const config = require('../config/config');
+const modifyVars = require('../config/theme');
 const getStyleLoader = require('./tools/getStyleLoader');
 const getDllReferPlugins = require('./tools/getDllReferPlugins');
-const config = require('./config/config');
-const modifyVars = require('./config/theme');
 const dllConfig = require('./webpack.dll.config');
 
 const OPEN_SOURCE_MAP = true;

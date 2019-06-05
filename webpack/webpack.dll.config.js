@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
-const paths = require('./config/paths');
+const paths = require('../config/paths');
 
 module.exports = {
   entry: {

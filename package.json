@@ -78,7 +78,6 @@
   },
   "dependencies": {
     "antd": "^3.15.0",
-    "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "history": "^4.7.2",
     "lodash": "^4.17.11",
@@ -87,6 +86,7 @@
     "qs": "^6.6.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-router-dom": "^4.3.1"
+    "react-router-dom": "^4.3.1",
+    "whatwg-fetch": "^3.0.0"
   }
 }

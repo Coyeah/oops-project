@@ -1,12 +1,12 @@
 const merge = require('webpack-merge');
-const common = require('./webpack.common.config.js');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // 将CSS提取到单独的文件中。它为每个包含CSS的JS文件创建一个CSS文件。
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // 引入clean-webpack-plugin插件，作用是清除 dist 文件及下的内容，因为每次编译完成后都会有一个 dist 文件夹存放静态文件，所以需要清除上次的 dist 文件
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const config = require('./config/config');
-const paths = require('./config/paths');
+const common = require('./webpack.common.config.js');
+const config = require('../config/config');
+const paths = require('../config/paths');
 
 const { USE_DLL } = config;
 const IS_ANALYSIS = process.argv.includes('--analysis');

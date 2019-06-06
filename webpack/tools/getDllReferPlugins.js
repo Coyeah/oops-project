@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
-const config = require('../config/config');
-const paths = require('../config/paths');
+const config = require('../../config/config');
+const paths = require('../../config/paths');
 
 const getDllReferPlugins = entries => {
   const names = Object.keys(entries);

@@ -6,18 +6,17 @@ if (process.env.NODE_ENV === 'development' && ENV_MOCK) {
 
 import React from 'react';
 import {render} from 'react-dom';
-import styles from './index.module.less';
+import './index.less';
 
 import Example from './Example';
 
 class App extends React.Component {
   render() {
     return (
-      <div id={styles.layout}>
+      <div id='oops-layout'>
         <h1>Oops! I am late. <Example /></h1>
-        <div className={styles.logo} />
+        <div className='oops-logo' />
         <p>Happy Coding at <span>./src/index.tsx</span>.</p>
-
       </div>
     )
   }

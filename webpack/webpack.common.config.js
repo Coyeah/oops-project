@@ -26,7 +26,7 @@ const lessModuleRegex = /\.module\.less$/;
 
 module.exports = {
   context: paths.appRoot,
-  entry: [paths.appIndex],
+  entry: ['@babel/polyfill', paths.appIndex],
   output: {
     publicPath: paths.PUBLIC_PATH,
     path: paths.appDist,

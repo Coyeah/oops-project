@@ -6,12 +6,13 @@ You can use `oops-cli` to quickly create.
 
 ```
 npm install oops-cli -g
+oops init projectName / oops init projectName --ts
 ```
 
 ## About branch
 
-* Normal Script: `single`
-* With TypeScript: `single-ts`
+* Normal Script: `init`
+* With TypeScript: `init-ts`
 
 ## If~
 

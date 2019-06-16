@@ -11,6 +11,7 @@ module.exports = {
     ["@babel/plugin-transform-runtime", { corejs: 2 }],
     ["import", { libraryName: "antd", style: true, }],
     "@babel/plugin-syntax-dynamic-import",
+    "@babel/plugin-transform-object-assign"
   ],
   overrides: [  // 把webpack配置文件转义
     {

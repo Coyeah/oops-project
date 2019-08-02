@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const config = require('../../config/config');
+const website = require('../../config/website');
 const paths = require('../../config/paths');
 
 const getDllReferPlugins = entries => {
@@ -11,7 +12,7 @@ const getDllReferPlugins = entries => {
   }
   return names.map(name =>
     new webpack.DllReferencePlugin({
-      manifest: path.resolve(paths.appDll, `${name}.manifest.json`),
+      manifest: path.resolve(paths.appDll, `${name}.${website.name}.manifest.json`),
     })
   )
 };

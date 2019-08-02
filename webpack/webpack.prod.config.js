@@ -6,6 +6,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin'); // 引入clean-webpa
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const common = require('./webpack.common.config.js');
 const config = require('../config/config');
+const website = require('../config/website');
 const paths = require('../config/paths');
 
 const { USE_DLL } = config;
@@ -16,8 +17,8 @@ module.exports = merge(common, {
   devtool: 'source-map',
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'css/[name].[contenthash].css',
-      chunkFilename: 'css/[id].[contenthash].css',
+      filename: `css/[name].[contenthash].${website.name}.css`,
+      chunkFilename: `css/[id].[contenthash].${website.name}.css`,
     }),
     new CleanWebpackPlugin([paths.appDist], {
       root: paths.appRoot, // 绝对路径，就是要根据这个 root 去找要删除的文件夹，默认是这个 webpack 配置文件所在额

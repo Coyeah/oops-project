@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const paths = require('../config/paths');
+const website = require('../config/website');
 
 module.exports = {
   entry: {
@@ -9,7 +10,7 @@ module.exports = {
   },
   output: {
     path: paths.appDll,
-    filename: '[name].dll.js',
+    filename: `[name].${website.name}.dll.js`,
     library: '_dll_[name]_library',
   },
   plugins: [
@@ -17,7 +18,7 @@ module.exports = {
       context: paths.appRoot,
       name: '_dll_[name]_library',
       // manifest.json 描述动态链接库包含了哪些内容
-      path: path.resolve(paths.appDll, '[name].manifest.json')
+      path: path.resolve(paths.appDll, `[name].${website.name}.manifest.json`)
     }),
   ],
 }

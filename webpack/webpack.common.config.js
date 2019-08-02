@@ -7,6 +7,7 @@ const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plug
 const CopyWebpackPlugin = require('copy-webpack-plugin'); // 用于直接复制公共的文件
 const paths = require('../config/paths');
 const config = require('../config/config');
+const website = require('../config/website');
 const modifyVars = require('../config/theme');
 const getStyleLoader = require('./tools/getStyleLoader');
 const getDllReferPlugins = require('./tools/getDllReferPlugins');
@@ -30,8 +31,8 @@ module.exports = {
   output: {
     publicPath: paths.PUBLIC_PATH,
     path: paths.appDist,
-    filename: '[name].[hash:8].js',
-    chunkFilename: '[name].[hash:8].js',
+    filename: `[name].[hash:8].${website.name}.js`,
+    chunkFilename: `[name].[hash:8].${website.name}.js`,
   },
   resolve: {
     alias: {
@@ -61,7 +62,7 @@ module.exports = {
               loader: 'url-loader',
               options: {
                 limit: 8192,
-                name: 'images/[name]-[hash:5].[ext]'
+                name: `images/[name]-[hash:5].${website.name}.[ext]`
               }
             }, {
               loader: "image-webpack-loader",
@@ -147,7 +148,7 @@ module.exports = {
           use: [{
             loader: 'file-loader',
             options: {
-              name: 'other/[name].[hash:8].[ext]',
+              name: `other/[name].[hash:8].${website.name}.[ext]`,
             },
           }], // 其他文件
         }
@@ -156,7 +157,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'oops', // 配置生成的 html 的 title，不会主动替换，需要通过模板引擎语法获取来配置
+      title: `${website.name}`, // 配置生成的 html 的 title，不会主动替换，需要通过模板引擎语法获取来配置
       filename: 'index.html',
       inject: true,
       template:  paths.appEjs, // 本地模板文件的位置，支持加载器（如 handlebars、ejs、undersore、html 等）
@@ -176,8 +177,8 @@ module.exports = {
     USE_DLL &&
       new HtmlWebpackIncludeAssetsPlugin({
         assets: [
-          'react.dll.js',
-          'reactDOM.dll.js',
+          `react.${website.name}.dll.js`,
+          `reactDOM.${website.name}.dll.js`,
         ],
         append: false,
       }),

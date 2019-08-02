@@ -16,113 +16,60 @@
     padding: 0;
     margin: 0;
   }
-
+  * {
+    box-sizing: border-box;
+  }
   #init-loading {
     position: fixed;
     top: 50%;
     left: 50%;
-    height: 100px;
     transform: translate(-50%, -50%);
+    height: 40px;
     display: flex;
-    align-items: flex-end;
+    justify-content: center;
   }
-
-  #init-loading>div {
-    width: 25px;
-    height: 25px;
-    box-sizing: border-box;
-    padding: 0;
-    margin: 10px;
-    background-color: #222f3e;
+  #init-loading-text {
+    text-align: center;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol !important;
+    line-height: 40px;
+    margin: 0px 15px;
+    color: rgba(0,0,0,.65);
+  }
+  #init-loading-ball {
+    background-color: #2d4059;
     border-radius: 50%;
-  }
+    border-top-left-radius: 0%;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #000;
+    transition: 0.2s all;
 
-  #init-loading>div:nth-child(1) {
-    animation-name: bounce-1;
-    animation-duration: 2s;
-    animation-delay: 0.2s;
+    animation-name: init-loading-animate;
+    animation-duration: 3s;
+    animation-delay: 1s;
     animation-timing-function: ease;
     animation-iteration-count: infinite;
   }
-
-  #init-loading>div:nth-child(2) {
-    animation-name: bounce-2;
-    animation-duration: 2s;
-    animation-delay: 0.4s;
-    animation-timing-function: ease;
-    animation-iteration-count: infinite;
-  }
-
-  #init-loading>div:nth-child(3) {
-    animation-name: bounce-3;
-    animation-duration: 2s;
-    animation-delay: 0.6s;
-    animation-timing-function: ease;
-    animation-iteration-count: infinite;
-  }
-
-  #init-loading>div:nth-child(4) {
-    animation-name: bounce-4;
-    animation-duration: 2s;
-    animation-delay: 0.8s;
-    animation-timing-function: ease;
-    animation-iteration-count: infinite;
-  }
-
-  #init-loading>div:nth-child(5) {
-    animation-name: bounce-5;
-    animation-duration: 2s;
-    animation-delay: 1.0s;
-    animation-timing-function: ease;
-    animation-iteration-count: infinite;
-  }
-
-  @keyframes bounce-1
+  @keyframes init-loading-animate
   {
-    0%   { height: 25px }
-    10%  { height: 75px; border-radius: 20px; background-color: #ee5253 }
-    30%  { height: 25px }
-  }
-
-  @keyframes bounce-2
-  {
-    0%   { height: 25px }
-    10%  { height: 75px; border-radius: 20px; background-color: #ff9f43 }
-    30%  { height: 25px }
-  }
-
-  @keyframes bounce-3
-  {
-    0%   { height: 25px }
-    10%  { height: 75px; border-radius: 20px; background-color: #0abde3 }
-    30%  { height: 25px }
-  }
-
-  @keyframes bounce-4
-  {
-    0%   { height: 25px }
-    10%  { height: 75px; border-radius: 20px; background-color: #10ac84 }
-    30%  { height: 25px }
-  }
-
-  @keyframes bounce-5
-  {
-    0%   { height: 25px }
-    10%  { height: 75px; border-radius: 20px; background-color: #5f27cd }
-    30%  { height: 25px }
+    13% { border-top-left-radius: 50%; background-color: #ea5455; }
+    26% { border-top-right-radius: 0px; background-color: #ea5455; }
+    39% { border-top-right-radius: 50%; background-color: #f07b3f; }
+    52% { border-bottom-right-radius: 0px; background-color: #f07b3f; }
+    75% { border-bottom-right-radius: 50%; background-color: #ffd460; }
+    78% { border-bottom-left-radius: 0px; background-color: #ffd460; }
   }
   </style>
 
 </head>
 
 <body>
-  <div id="root">
+  <div>
     <div id="init-loading">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+      <div id="init-loading-ball"></div>
+      <div id="init-loading-text">Loading...</div>
     </div>
   </div>
 </body>

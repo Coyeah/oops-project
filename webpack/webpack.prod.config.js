@@ -2,7 +2,7 @@ const merge = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // 将CSS提取到单独的文件中。它为每个包含CSS的JS文件创建一个CSS文件。
-const CleanWebpackPlugin = require('clean-webpack-plugin'); // 引入clean-webpack-plugin插件，作用是清除 dist 文件及下的内容，因为每次编译完成后都会有一个 dist 文件夹存放静态文件，所以需要清除上次的 dist 文件
+const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // 引入clean-webpack-plugin插件，作用是清除 dist 文件及下的内容，因为每次编译完成后都会有一个 dist 文件夹存放静态文件，所以需要清除上次的 dist 文件
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const common = require('./webpack.common.config.js');
 const config = require('../config/config');
@@ -20,7 +20,7 @@ module.exports = merge(common, {
       filename: `css/[name].[contenthash].${website.name}.css`,
       chunkFilename: `css/[id].[contenthash].${website.name}.css`,
     }),
-    new CleanWebpackPlugin([paths.appDist], {
+    new CleanWebpackPlugin({
       root: paths.appRoot, // 绝对路径，就是要根据这个 root 去找要删除的文件夹，默认是这个 webpack 配置文件所在额
       verbose: true, // 控制台打印日志
       dry: false, // 为 false 是删除文件夹的

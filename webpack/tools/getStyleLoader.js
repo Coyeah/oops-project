@@ -12,14 +12,16 @@ const getStyleLoader = ({
       ? MiniCssExtractPlugin.loader
       : {
           loader: 'style-loader',
-          options: { sourceMap }
+          options: { 
+            injectType: 'singletonStyleTag'
+          }
         },
     {
       loader: 'css-loader',
       options: {
         modules,
         sourceMap,
-        localIdentName: "[path][name]__[local]--[hash:base64:5]",  // Configure the generated ident
+        // localIdentName: "[path][name]__[local]--[hash:base64:5]",  // Configure the generated ident
         importLoaders: useLess ? 2 : 1,  // Number of loaders applied before CSS loader
       },
     },

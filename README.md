@@ -4,7 +4,7 @@ A projcet with `Webpack` and `React`, this allows you to quickly get into a stat
 
 You can use `oops-cli` to quickly create.
 
-```
+```shell
 npm install oops-cli -g
 oops init projectName / oops init projectName --ts
 ```

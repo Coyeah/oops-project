@@ -1,0 +1,40 @@
+.sider {
+  background-color: @black;
+
+  .logo {
+    margin: 24px auto;
+  }
+
+  .item {
+    position: relative;
+    padding: 12px 24px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+
+    &-text {
+      margin-left: 8px;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 70%;
+      border-radius: 10px;
+      transition: background-color 0.6s;
+    }
+  }
+
+  .item:hover,
+  .item-focus {
+    color: @white;
+
+    &::after {
+      background-color: @white;
+    }
+  }
+}

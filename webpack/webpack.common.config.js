@@ -75,7 +75,7 @@ module.exports = {
                   enabled: false,
                 },
                 pngquant: { // 使用 imagemin-pngquant 压缩 png
-                  quality: '65-90',
+                  quality: [0.65, 0.90],
                   speed: 4
                 },
                 gifsicle: { // 压缩 gif 的配置

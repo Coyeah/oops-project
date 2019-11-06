@@ -1,0 +1,32 @@
+.header {
+  background-color: #F0F2F5;
+  height: 36px;
+
+  display: flex;
+  justify-content: space-between;
+
+  .bread-crumbs {
+    color: @black;
+    font-size: 14px;
+    font-weight: 330;
+
+    & a {
+      &:link, &:visited {
+        color: @black;
+      }
+
+      &:hover, &:active {
+        color: @primary-color;
+      }
+    }
+
+    &-text {
+      display: inline;
+    }
+
+    &-break {
+      margin: 0px 12px;
+      user-select: none;
+    }
+  }
+}

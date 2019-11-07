@@ -21,10 +21,20 @@ export const routeConfig = [
     path: '/home',
     loader: () => import('@/pages/home'),
   }, {
+    name: '持久化1',
+    icon: 'appstore',
+    path: '/endurance/1',
+    loader: () => import ('@/pages/endurance/page1')
+  }, {
+    name: '持久化2',
+    icon: 'appstore',
+    path: '/endurance/2',
+    loader: () => import ('@/pages/endurance/page2')
+  }, {
     name: '测试',
-    icon: 'home',
+    icon: 'border',
     path: '/test',
-    loader: () => import('@/pages/home'),
+    loader: () => import('@/pages/test'),
   }, {
     path: '/403',
     loader: () => import('@/pages/exception/E403')

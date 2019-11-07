@@ -36,6 +36,7 @@ const createRouteMap: (routes: RouteItem[], prefix?: string[]) => object = (rout
       ...newMap,
     }
   });
+  map['/'] = map['/home'];
   return map;
 };
 

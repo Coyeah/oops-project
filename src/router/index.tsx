@@ -21,6 +21,11 @@ export const routeConfig = [
     path: '/home',
     loader: () => import('@/pages/home'),
   }, {
+    name: '密码生成',
+    icon: 'lock',
+    path: '/password',
+    loader: () => import('@/pages/password'),
+  }, {
     name: '持久化1',
     icon: 'appstore',
     path: '/endurance/1',

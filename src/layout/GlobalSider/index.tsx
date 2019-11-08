@@ -33,6 +33,9 @@ const GlobalSider: React.FC<{ pathname: string }> = ({
           )
         })}
       </div>
+      <div className={styles.bottom}>
+        coyeah.top
+      </div>
     </Sider>
   )
 };

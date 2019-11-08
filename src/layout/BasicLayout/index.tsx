@@ -15,7 +15,8 @@ const BasicLayout: React.FC = (props) => {
     });
     return () => unListen();
   }, []);
-  const { location: { pathname } } = history;
+  let { location: { pathname } } = history;
+  if (pathname === '/') pathname = '/home';
   return (
     <Layout className={styles.layout}>
       <GlobalSider pathname={pathname} />

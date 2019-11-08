@@ -1,5 +1,7 @@
 .sider {
   background-color: @black;
+  position: relative;
+  padding-bottom: 48px;
 
   .logo {
     margin: 24px auto;
@@ -36,5 +38,16 @@
     &::after {
       background-color: @white;
     }
+  }
+
+  .bottom {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    color: @white;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 48px;
   }
 }

@@ -1,10 +1,13 @@
 import React, { useState, useCallback } from 'react';
-import { Slider } from 'antd';
+import { Button } from 'antd';
 import { SliderValue } from 'antd/lib/slider';
+import Setting, { Values } from './Setting';
 import styles from './index.module.less';
+import { pswMaker } from './utils';
 
 const Password: React.FC = () => {
-  const [state, setState] = useState({
+  const [res, setRes] = useState<string>('');
+  const [state, setState] = useState<Values>({
     letter: 10,
     char: 2,
     number: 8
@@ -17,17 +20,28 @@ const Password: React.FC = () => {
     }));
   }, []);
 
-  const { letter, char, number } = state;
+  const pswGenerate = useCallback((value: Values) => {
+    setRes(pswMaker(value));
+  }, []);
+
+  const btnRender = useCallback(() => {
+    return (
+      <Button
+        type="primary"
+        size="small"
+        onClick={() => pswGenerate(state)}
+      >生成</Button>
+    )
+  }, [state]);
+
   return (
-    <div>
-      <div className={styles.title}>配置：</div>
-      <div className={styles.setting}>
-        <div className={styles.text}>字母：<span className={styles.point}>{letter}</span></div>
-        <Slider defaultValue={30} max={20} value={letter} onChange={onSliderChange('letter')} />
-        <div className={styles.text}>数字：<span className={styles.point}>{number}</span></div>
-        <Slider defaultValue={30} max={15} value={number} onChange={onSliderChange('number')} />
-        <div className={styles.text}>字符：<span className={styles.point}>{char}</span></div>
-        <Slider defaultValue={30} max={10} value={char} onChange={onSliderChange('char')} />
+    <div className={styles.layout}>
+      <div className={styles.left}>
+        <Setting values={state} onSliderChange={onSliderChange} />
+        {btnRender()}
+      </div>
+      <div className={styles.right}>
+        <div className={styles.result}>{res}</div>
       </div>
     </div>
   )

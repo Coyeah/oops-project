@@ -11,7 +11,6 @@ interface PswValues {
 
 export const pswMaker = (values: PswValues) => {
   let { letter, char, number } = values;
-  console.log('pswMaker', values);
   const length = letter + char + number;
   const result: string[] = [];
   let whileFlag = true;

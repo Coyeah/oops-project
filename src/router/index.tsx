@@ -36,10 +36,10 @@ export const routeConfig = [
     path: '/endurance/2',
     loader: () => import ('@/pages/endurance/page2')
   }, {
-    name: '测试悬停',
-    icon: 'border',
-    path: '/suspense',
-    loader: () => import('@/pages/suspense'),
+    name: 'Github',
+    icon: 'github',
+    path: '/github',
+    loader: () => import('@/pages/github')
   }, {
     name: '测试',
     icon: 'border',

@@ -1,18 +1,28 @@
-import React, { useEffect } from 'react';
+import React, { Suspense } from 'react';
 import { useAPI } from '@/components/useHooks';
+import { Button } from 'antd';
 
-const Github = () => {
-
+const Demo = () => {
   const { run, data } = useAPI({
     url: 'https://api.github.com/users/Coyeah',
     method: 'GET',
-  }); 
-  console.log('data: ', data);
+    manual: true,
+  });
 
   return (
     <div>
-      Hello World!
+      <Button onClick={() => run()}>Fetch</Button>
+      <div>{JSON.stringify(data)}</div>
     </div>
+  )
+}
+
+const Github = () => {
+  return (
+    <Suspense fallback={<div>This is a loading in single page.</div>}>
+      <h1>Hello World!</h1>
+      <Demo />
+    </Suspense>
   )
 };
 

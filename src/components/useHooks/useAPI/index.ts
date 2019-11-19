@@ -69,27 +69,6 @@ const useAPI = <Result = any>(opt: IRequestProps & RequestInit & IOperateProps<R
 
   const fn = useCallback(async (attach?: object) => {
     let res: any;
-    // payload = payload || {};
-    // const { url, data = {} } = opt;
-    // if (initPayload === null) { // 自定义 request 方法
-    //   res = await({
-    //     ...data,
-    //     ...payload,
-    //   });
-    // } else if (!url) {
-    //   throw Error('"useAPI": One of the [url] or [request] must exist.');
-    // } else {
-    //   const ipl = initPayload || {};
-    //   const d = {
-    //     ...data,
-    //     ...payload
-    //   };
-    //   res = await _method((url as string), {
-    //     data: d,
-    //     // body: JSON.stringify(d),
-    //     ...ipl
-    //   });
-    // }
     attach = attach || {};
     const { request, payload = {}, url, data } = opt;
     if (request) {
@@ -163,8 +142,6 @@ const useAPI = <Result = any>(opt: IRequestProps & RequestInit & IOperateProps<R
         return error;
       });
   }, []);
-
-
 
   const stop = useCallback(() => {
     count.current += 1;

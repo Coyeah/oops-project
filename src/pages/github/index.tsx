@@ -7,6 +7,7 @@ const Demo = () => {
     url: 'https://api.github.com/users/Coyeah',
     method: 'GET',
     manual: true,
+    suspense: true
   });
 
   // const [state, set] = useState<any>(null);

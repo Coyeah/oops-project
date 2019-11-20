@@ -16,6 +16,7 @@ type noop = (...args: any[]) => void;
 const noop: noop = () => { };
 
 interface IOperateProps<T> {
+  suspense?: boolean; // 支持 React.Suspense
   manual?: boolean;
   pollingInterval?: number;
   onSuccess?: (d: T) => void;
@@ -27,7 +28,6 @@ interface IRequestProps {
   request?: (...args: any[]) => Promise<any>;
   data?: object;
   payload?: object;
-  suspense?: boolean;
 }
 
 export type UseAPIProps<T = any> = IRequestProps & RequestInit & IOperateProps<T>;
@@ -45,10 +45,10 @@ export interface ReturnValue<T> {
   };
 }
 
-const Uninitialized = -1;
-const Pending = 0;
-const Resolved = 1;
-const Rejected = 2;
+const Uninitialized = -1,
+  Pending = 0,
+  Resolved = 1,
+  Rejected = 2;
 
 globalMethod = fetch;
 
@@ -57,18 +57,19 @@ const useAPI = <Result = any>(opt: IRequestProps & RequestInit & IOperateProps<R
   // const _method = opt.request || globalMethod || fetch;
   // 内置 options 对象
   const _options = useMemo<IOperateProps<Result>>(() => {
-    const { manual, pollingInterval, onSuccess, onError } = opt;
+    const { manual, pollingInterval, onSuccess, onError, suspense } = opt;
     return {
       manual,
       pollingInterval,
       onSuccess,
-      onError
+      onError, 
+      suspense
     };
   }, [opt]);
   // 请求传参初始值
   const initPayload = useMemo<RequestInit | null>(() => {
     if (opt.request) return null;
-    const { url, data, payload, request, manual, pollingInterval, onSuccess, onError, ...rest } = opt;
+    const { url, data, payload, request, manual, pollingInterval, onSuccess, onError, suspense, ...rest } = opt;
     return rest;
   }, [opt]);
 
@@ -169,6 +170,7 @@ const useAPI = <Result = any>(opt: IRequestProps & RequestInit & IOperateProps<R
             _options.onError(error);
           }
           if (runCount === count.current) {
+            status.current = Rejected;
             setState((s: ReturnValue<Result>) => ({ ...s, error, loading: false }));
           }
         }
@@ -178,8 +180,7 @@ const useAPI = <Result = any>(opt: IRequestProps & RequestInit & IOperateProps<R
     return task;
   }, []);
 
-  console.log(status, 'status');
-  if (status.current !== Uninitialized && status.current !== Resolved) {
+  if (_options.suspense && status.current !== Uninitialized && status.current !== Resolved) {
     throw runner;
   }
 

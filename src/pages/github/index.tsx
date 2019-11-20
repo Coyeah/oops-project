@@ -1,6 +1,9 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { useAPI } from '@/components/useHooks';
 import { Button } from 'antd';
+
+const Resolved = 1;
+const Pending = 2;
 
 const Demo = () => {
   const { run, data } = useAPI({
@@ -9,9 +12,24 @@ const Demo = () => {
     manual: true,
   });
 
+  const [state, set] = useState<any>(null);
+  const [runner, setRunner] = useState<any>(null);
+
+  const onClick = () => {
+    const runner = run().then(data => {
+      set(Resolved);
+    });
+    setRunner(runner);
+    set(Pending);
+  }
+
+  console.log(state);
+  if (state === Pending) {
+    throw runner;
+  }
   return (
     <div>
-      <Button onClick={() => run()}>Fetch</Button>
+      <Button onClick={onClick}>Fetch</Button>
       <div>{JSON.stringify(data)}</div>
     </div>
   )

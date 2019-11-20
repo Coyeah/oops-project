@@ -45,6 +45,11 @@ export interface ReturnValue<T> {
   };
 }
 
+const Uninitialized = -1;
+const Pending = 0;
+const Resolved = 1;
+const Rejected = 2;
+
 globalMethod = fetch;
 
 const useAPI = <Result = any>(opt: IRequestProps & RequestInit & IOperateProps<Result>) => {
@@ -105,6 +110,8 @@ const useAPI = <Result = any>(opt: IRequestProps & RequestInit & IOperateProps<R
   const timer = useRef<Timer<Result> | undefined>(undefined);
   const count = useRef(0);
   const init = useRef(true);
+  const status = useRef(Uninitialized);
+  const [runner, setRunner] = useState<any>(null);
 
   useEffect(() => {
     count.current += 1;
@@ -117,14 +124,40 @@ const useAPI = <Result = any>(opt: IRequestProps & RequestInit & IOperateProps<R
   const run = useCallback((...args: any[]): Promise<Result | undefined> => {
     // 确保不会返回被取消的结果
     const runCount = count.current;
+    status.current = Pending;
     setState((s: ReturnValue<Result>) => ({ ...s, loading: true }));
-    return fn(...args)
+    // return fn(...args)
+    //   .then(data => {
+    //     if (runCount === count.current) {
+    //       if (_options.onSuccess) {
+    //         _options.onSuccess(data);
+    //       }
+    //       if (runCount === count.current) {
+    //         status.current = Resolved;
+    //         setState((s: ReturnValue<Result>) => ({ ...s, data, loading: false }));
+    //       }
+    //     }
+    //     return data;
+    //   })
+    //   .catch(error => {
+    //     if (runCount === count.current) {
+    //       if (_options.onError) {
+    //         _options.onError(error);
+    //       }
+    //       if (runCount === count.current) {
+    //         setState((s: ReturnValue<Result>) => ({ ...s, error, loading: false }));
+    //       }
+    //     }
+    //     return error;
+    //   });
+    const task = fn(...args)
       .then(data => {
         if (runCount === count.current) {
           if (_options.onSuccess) {
             _options.onSuccess(data);
           }
           if (runCount === count.current) {
+            status.current = Resolved;
             setState((s: ReturnValue<Result>) => ({ ...s, data, loading: false }));
           }
         }
@@ -141,7 +174,14 @@ const useAPI = <Result = any>(opt: IRequestProps & RequestInit & IOperateProps<R
         }
         return error;
       });
+    setRunner(task);
+    return task;
   }, []);
+
+  console.log(status, 'status');
+  if (status.current !== Uninitialized && status.current !== Resolved) {
+    throw runner;
+  }
 
   const stop = useCallback(() => {
     count.current += 1;

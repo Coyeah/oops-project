@@ -1,8 +1,8 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const common = require('./webpack.common.config.js');
-const paths = require('../config/paths');
-const proxyConfig = require('../config/proxy');
+const paths = require('./config/paths');
+const proxyConfig = require('./config/proxy');
 
 module.exports = merge(common, {
   mode: 'development',

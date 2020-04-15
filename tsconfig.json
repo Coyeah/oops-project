@@ -27,6 +27,16 @@
       //要包含的类型声明文件名列表；如果指定了types，只有被列出来的包才会被包含进来
       "types": ["node", "react", "react-dom", "react-router-dom", "antd", "lodash", "classnames"]
   },
-  "exclude": ["dist", "node_modules"],
+  "exclude": [
+    "node_modules",
+    "build",
+    "scripts",
+    "acceptance-tests",
+    "webpack",
+    "jest",
+    "src/setupTests.ts",
+    "tslint:latest",
+    "tslint-config-prettier"
+  ],
   "include": ["./src/**/*", "config/proxy.config.js"]
 }

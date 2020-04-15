@@ -1,12 +1,15 @@
 const webpack = require('webpack');
 const path = require('path');
-const config = require('../../config/config');
-const website = require('../../config/website');
-const paths = require('../../config/paths');
+
+const config = require('../config/config');
+const website = require('../config/website');
+const paths = require('../config/paths');
 
 const getDllReferPlugins = entries => {
   const names = Object.keys(entries);
-  const { USE_DLL } = config;
+  const {
+    USE_DLL
+  } = config;
   if (!USE_DLL) {
     return [];
   }

@@ -18,7 +18,7 @@ export default {
       data: {
         username: username,
         avatar: '/public/carbon.png',
-        authority: ['101', '101001', '101002', '101003', '102', '102001', '102002'],
+        authority: ['101', '101001', '101002', '102', '102001', '102002'],
         ticket: username,
       },
     };

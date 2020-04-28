@@ -29,6 +29,7 @@ export default class BaseMenu extends React.PureComponent<BaseMenuProps> {
   getIcon = (icon?: string) => {
     if (!icon) return null;
     const IconV4 = iconV4[icon];
+    if (!IconV4) return null;
     return <IconV4 />;
   };
 

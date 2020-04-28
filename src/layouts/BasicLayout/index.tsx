@@ -2,7 +2,7 @@
  * @Author: ye.chen
  * @Date: 2020-04-15 16:56:47
  * @Last Modified by: ye.chen
- * @Last Modified time: 2020-04-28 15:35:04
+ * @Last Modified time: 2020-04-28 16:18:45
  */
 import React, { useState, useEffect } from 'react';
 import { Layout, Spin } from 'antd';
@@ -18,7 +18,6 @@ import { inject, observer } from 'mobx-react';
 import { AuthStoreProps } from '@/stores/AuthStore';
 import RenderAuthorize from '@/components/function/Authorized';
 import Exception403 from '@/pages/exception/403';
-import { ResponseSchema } from '@/utils/request';
 
 export const basicContext = context;
 
@@ -74,7 +73,8 @@ const Basic: React.FC = (props) => {
   useEffect(() => {
     authStore.login();
   }, []);
-  const Authorized = RenderAuthorize(authStore.getInfomation().authority);
+  console.log(authStore.getInfomation());
+  const Authorized = RenderAuthorize([...(authStore.getInfomation().authority || [])]);
   const routesFlat = getFlatRoutes(routes);
   const routesEnds = routesFilter(routesFlat, { isExact: true, check: Authorized.check });
   const currentRoute = getCurrentRoute(routesFlat, pathname);

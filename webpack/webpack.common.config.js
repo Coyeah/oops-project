@@ -6,10 +6,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin'); // 引入 html-webpack
 // const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin'); // 用于添加js或css文件路径（例如那些被copy-webpack-plugin插件编译的文件）
 const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin'); // 用于直接复制公共的文件
+const HappyPack = require('happypack'); // Happypack 只是作用在 loader 上，使用多个进程同时对文件进行编译。
 const paths = require('./config/paths');
-const {
-  USE_DLL
-} = require('./config/config');
+const { USE_DLL } = require('./config/config');
 const website = require('./config/website');
 const modifyVars = require('./config/theme');
 const regexp = require('./config/regexp');
@@ -31,7 +30,11 @@ module.exports = {
   },
   resolve: {
     alias: {
-      "@": path.resolve(paths.appSrc),
+      '@': path.resolve(paths.appSrc),
+      apis: path.resolve(paths.appSrc, 'common/apis'),
+      config: path.resolve(paths.appRoot, 'config'),
+      assets: path.resolve(paths.appRoot, 'assets'),
+      components: path.resolve(paths.appRoot, 'components'),
     },
     // 删除不必要的后缀自动补全，少了文件后缀的自动匹配，即减少了文件路径查询的工作
     // 其他文件可以在编码时指定后缀，如 import('./index.scss')
@@ -40,94 +43,117 @@ module.exports = {
   },
   module: {
     strictExportPresence: true,
-    rules: [{
-      test: regexp.REGEXP_SCRIPT,
-      enforce: "pre",
-      include: paths.appSrc,
-      use: {
-        loader: 'eslint-loader',
-        options: {
-          cache: true,
-          quiet: true
-        }
+    rules: [
+      {
+        test: regexp.REGEXP_SCRIPT,
+        enforce: 'pre',
+        include: paths.appSrc,
+        use: {
+          loader: 'eslint-loader',
+          options: {
+            cache: true,
+            quiet: true,
+          },
+        },
       },
-    }, {
-      oneOf: [{
-          test: regexp.REGEXP_IMAGE,
-          use: [{
-            loader: 'url-loader',
-            options: {
-              limit: 8192,
-              name: `images/[name]-[hash:5].${website.name}.[ext]`
-            }
-          }]
-        }, {
-          test: regexp.REGEXP_SCRIPT,
-          exclude: /node_modules/,
-          use: ['babel-loader'],
-        }, {
-          test: regexp.REGEXP_TYPESCRIPT,
-          exclude: /node_modules/,
-          use: ['babel-loader'],
-        },
-        {
-          test: regexp.REGEXP_CSS,
-          exclude: regexp.REGEXP_CSS_MODULE,
-          use: getStyleLoader({
-            isProd,
-            sourceMap: OPEN_SOURCE_MAP,
-            modules: false,
-            modifyVars,
-          }),
-          sideEffects: true,
-        },
-        {
-          test: regexp.REGEXP_CSS_MODULE,
-          exclude: paths.appNodeModules,
-          use: getStyleLoader({
-            isProd,
-            sourceMap: OPEN_SOURCE_MAP,
-            modules: true,
-            modifyVars,
-          }),
-          sideEffects: true,
-        },
-        {
-          test: regexp.REGEXP_LESS,
-          exclude: regexp.REGEXP_LESS_MODULE,
-          use: getStyleLoader({
-            isProd,
-            sourceMap: OPEN_SOURCE_MAP,
-            modules: false,
-            useLess: true,
-            modifyVars,
-          }),
-          sideEffects: true,
-        },
-        {
-          test: regexp.REGEXP_LESS_MODULE,
-          exclude: paths.appNodeModules,
-          use: getStyleLoader({
-            isProd,
-            sourceMap: OPEN_SOURCE_MAP,
-            modules: true,
-            useLess: true,
-            modifyVars,
-          }),
-          sideEffects: true,
-        },
-        {
-          exclude: [/\.(js|jsx)$/, /\.(html|ejs)$/, /\.(css|less)$/, /\.json$/],
-          include: paths.appSrc,
-          use: [{
-            loader: 'file-loader',
-            options: {
-              name: `other/[name].[hash:8].${website.name}.[ext]`,
-            },
-          }], // 其他文件
-        }
-      ],
-    }]
+      {
+        oneOf: [
+          {
+            test: regexp.REGEXP_IMAGE,
+            use: [
+              {
+                loader: 'url-loader',
+                options: {
+                  limit: 8192,
+                  name: `images/[name]-[hash:5].${website.name}.[ext]`,
+                },
+              },
+            ],
+          },
+          {
+            test: regexp.REGEXP_SCRIPT,
+            exclude: /node_modules/,
+            use: ['happypack/loader'],
+          },
+          {
+            test: regexp.REGEXP_TYPESCRIPT,
+            exclude: /node_modules/,
+            use: ['happypack/loader'],
+          },
+          {
+            test: regexp.REGEXP_CSS,
+            exclude: regexp.REGEXP_CSS_MODULE,
+            use: getStyleLoader({
+              isProd,
+              sourceMap: OPEN_SOURCE_MAP,
+              modules: false,
+              modifyVars,
+            }),
+            sideEffects: true,
+          },
+          {
+            test: regexp.REGEXP_CSS_MODULE,
+            exclude: paths.appNodeModules,
+            use: getStyleLoader({
+              isProd,
+              sourceMap: OPEN_SOURCE_MAP,
+              modules: true,
+              modifyVars,
+            }),
+            sideEffects: true,
+          },
+          {
+            // 解决 antd less 模块化的兼容问题
+            test: regexp.REGEXP_LESS,
+            exclude: /node_modules/,
+            use: getStyleLoader({
+              isProd,
+              sourceMap: OPEN_SOURCE_MAP,
+              modules: true,
+              useLess: true,
+              modifyVars,
+            }),
+            sideEffects: true,
+          },
+          {
+            test: regexp.REGEXP_LESS,
+            // exclude: regexp.REGEXP_LESS_MODULE,
+            use: getStyleLoader({
+              isProd,
+              sourceMap: OPEN_SOURCE_MAP,
+              modules: false,
+              useLess: true,
+              modifyVars,
+            }),
+            sideEffects: true,
+          },
+          // {
+          //   test: regexp.REGEXP_LESS_MODULE,
+          //   exclude: paths.appNodeModules,
+          //   use: getStyleLoader({
+          //     isProd,
+          //     sourceMap: OPEN_SOURCE_MAP,
+          //     modules: true,
+          //     useLess: true,
+          //     modifyVars,
+          //   }),
+          //   sideEffects: true,
+          // },
+          {
+            exclude: [/\.(js|jsx)$/, /\.(html|ejs)$/, /\.(css|less)$/, /\.json$/],
+            include: paths.appSrc,
+            use: [
+              {
+                loader: 'file-loader',
+                options: {
+                  name: `other/[name].[hash:8].${website.name}.[ext]`,
+                },
+              },
+            ], // 其他文件
+          },
+        ],
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -135,7 +161,8 @@ module.exports = {
       filename: 'index.html',
       inject: true,
       template: paths.appEjs, // 本地模板文件的位置，支持加载器（如 handlebars、ejs、undersore、html 等）
-      minify: { // 用于压缩 html 的配置
+      minify: {
+        // 用于压缩 html 的配置
         removeComments: true,
         collapseWhitespace: true,
         removeRedundantAttributes: true,
@@ -149,36 +176,36 @@ module.exports = {
       },
     }),
     USE_DLL &&
-    new HtmlWebpackTagsPlugin({
-      tags: [
-        `react.${website.name}.dll.js`,
-        `reactDOM.${website.name}.dll.js`,
-      ],
-      append: false,
-    }),
+      new HtmlWebpackTagsPlugin({
+        tags: ['react', 'reactDOM'].map((name) => `${name}.${website.name}.dll.js`),
+        append: false,
+      }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), // IgnorePlugin 防止在 import 或 require 调用时，生成以下正则表达式匹配的模块
     new ProgressBarPlugin(),
     new LodashModuleReplacementPlugin({
       paths: true,
     }),
-    new webpack.DefinePlugin({
-      'ENV_MOCK': process.env.MOCK !== 'none'
+    new CopyWebpackPlugin(
+      [
+        {
+          from: paths.appPublic,
+        },
+        USE_DLL && {
+          from: paths.appDll,
+        },
+      ].filter(Boolean),
+    ),
+    new HappyPack({
+      loaders: ['babel-loader'],
     }),
-    new CopyWebpackPlugin([{
-        from: paths.appPublic,
-      },
-      USE_DLL && {
-        from: paths.appDll,
-      },
-    ].filter(Boolean)),
     ...getDllReferPlugins(dllConfig.entry),
   ].filter(Boolean),
   node: {
-    dgram: "empty",
-    fs: "empty",
-    net: "empty",
-    tls: "empty",
-    child_process: "empty",
+    dgram: 'empty',
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty',
+    child_process: 'empty',
   },
   stats: {
     children: true,

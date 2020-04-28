@@ -1,8 +1,7 @@
-const theme = {
-  "@primary-color": '#00adb5',
-  '@white': '#eeeeee',
-  '@black': '#222831',
-  '@gray': '#393e46'
-}
+const themeConfig = require('../../config/theme.config');
+const theme = {};
+Object.keys(themeConfig).forEach((key) => {
+  theme[`@${key}`] = themeConfig[key];
+});
 
 module.exports = theme;

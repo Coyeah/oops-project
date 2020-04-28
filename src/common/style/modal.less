@@ -1,0 +1,50 @@
+body {
+  :global {
+    // =============== 弹窗 =============== //
+    .ant-modal-content {
+      border-radius: 8px;
+
+      .ant-modal-close {
+        //display: none;
+      }
+
+      .ant-modal-header {
+        font-family: PingFangSC-Semibold;
+        font-size: 16px;
+        color: #333333;
+        line-height: 24px;
+
+        padding: 25px 24px;
+
+        border-radius: 8px 8px 0px 0px;
+        border: none;
+      }
+
+      .ant-modal-footer {
+        padding: 14px 24px 24px 24px;
+        border: none;
+
+        & .ant-btn {
+          width: 80px;
+          height: 30px;
+
+          &:nth-child(1) {
+            font-family: PingFangSC-Semibold;
+            // font-size: 12px;
+            color: #cccccc;
+            text-align: center;
+            line-height: 20px;
+
+            border: none;
+            box-shadow: none;
+          }
+        }
+
+        & .ant-btn-primary {
+          color: #fff !important;
+        }
+      }
+    }
+    // =============== 弹窗 =============== //
+  }
+}

@@ -6,8 +6,13 @@ const website = {
   owner: 'coyeah',
   description: 'Create a quick start project',
   repo: 'https://github.com/Coyeah/oops-project',
-  licenses: "http://creativecommons.org/licenses/by-nc/4.0/",
+  licenses: 'http://creativecommons.org/licenses/by-nc/4.0/',
   since: 2020,
 };
 
-module.exports = website;
+const customInfo = require('../../config/site.config') || {};
+
+module.exports = {
+  ...website,
+  ...customInfo,
+};

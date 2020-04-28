@@ -7,15 +7,15 @@ const getStyleLoader = ({
   useLess = false,
   modifyVars = {},
 }) => {
-
   return [
-    isProd ?
-    MiniCssExtractPlugin.loader : {
-      loader: 'style-loader',
-      options: {
-        injectType: 'singletonStyleTag'
-      }
-    },
+    isProd
+      ? MiniCssExtractPlugin.loader
+      : {
+          loader: 'style-loader',
+          options: {
+            injectType: 'singletonStyleTag',
+          },
+        },
     {
       loader: 'css-loader',
       options: {
@@ -28,17 +28,17 @@ const getStyleLoader = ({
     {
       loader: 'postcss-loader',
       options: {
-        sourceMap
+        sourceMap,
       },
     },
     useLess && {
-      loader: 'less-loader',
+      loader: require.resolve('less-loader'), // compiles Less to CSS
       options: {
         javascriptEnabled: true,
         sourceMap,
         modifyVars,
-      }
-    }
+      },
+    },
   ].filter(Boolean);
 };
 

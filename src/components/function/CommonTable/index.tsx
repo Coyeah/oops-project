@@ -2,7 +2,7 @@
  * @Author: ye.chen
  * @Date: 2020-04-08 16:17:31
  * @Last Modified by: ye.chen
- * @Last Modified time: 2020-04-24 15:45:26
+ * @Last Modified time: 2020-04-29 17:50:49
  */
 import React from 'react';
 import { Input, Button } from 'antd';
@@ -14,11 +14,13 @@ import {
   FetchTableOnRefTaget,
   PageState,
   CommonFilterProps,
+  ColumnsType,
 } from './types';
 import FetchTable, { defaultPageState } from './FetchTable';
 import CommonFilter from './CommonFilter';
 import Center from '@/components/layout/Center';
 import { Type2Enum } from '@/components/function/Type2Component';
+import { handleTableColumns } from './utils';
 
 export { Type2Enum };
 
@@ -135,13 +137,16 @@ export default class CommonTable extends React.PureComponent<CommonTableProps, C
   };
 
   renderTable = () => {
-    const { fetchTable, payload } = this.state;
+    let { fetchTable, payload } = this.state;
     // const { rowSelection: { selectedRowKeys } } = fetchTable;
     let selectedRowKeys: any[] | null = null;
     let onChange: any = () => {};
     if (fetchTable.rowSelection) {
       selectedRowKeys = fetchTable.rowSelection.selectedRowKeys || [];
       onChange = fetchTable.rowSelection.onChange;
+    }
+    if (fetchTable.columns) {
+      fetchTable.columns = handleTableColumns(fetchTable.columns as ColumnsType);
     }
     return (
       <>

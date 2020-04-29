@@ -1,16 +1,26 @@
 import { UseAPIProps } from '../useHooks/useAPI';
-import { TableProps } from 'antd/lib/table';
+import { TableProps, ColumnProps } from 'antd/lib/table';
 import { FormProps } from 'antd/lib/form';
 import { InputProps, SearchProps } from 'antd/lib/input';
 import { Type2FormItemProps } from '../Type2Component/formitem';
+import { TooltipProps } from 'antd/lib/tooltip';
 
-export type FetchTableProps = {
+export interface ColumnType extends Omit<ColumnProps<any>, 'ellipsis'> {
+  ellipsis?: number;
+  tooltip?: TooltipProps;
+}
+
+export type ColumnsType = ColumnType[];
+
+export interface FetchTableProps extends Omit<TableProps<any>, 'columns'> {
   fetch?: UseAPIProps;
   onRef?: (ref: FetchTableOnRefTaget) => void;
   payload?: AnyObject; // 参数
   namespace?: StringObject;
   tableComponent?: React.ElementType;
-} & TableProps<any>;
+
+  columns?: ColumnsType | ColumnProps<any>[];
+}
 
 export type CommonTableProps<T = AnyObject> = {
   search?: CommonTableSearch;

@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { Layout, Spin } from 'antd';
 import context from './context';
 import { RouterType } from '../RouterLayout';
-import { PageHeaderLayoutWithContext } from '../PageHeaderLayout';
+import { PageHeaderLayoutWithContext } from '@/components/layout/PageHeaderLayout';
 import BasicSider, { BasicSiderProps } from '@/components/layout/BasicSider';
 import BasicHeader, { BasicHeaderProps, HandleCollapseFunc } from '@/components/layout/BasicHeader';
 import { getFlatRoutes, getCurrentRoute, routesFilter, getFirstRoute } from '@/utils/authorized';

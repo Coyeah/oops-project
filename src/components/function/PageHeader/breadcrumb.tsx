@@ -26,6 +26,7 @@ const BreadcrumbView: React.FC<BreadcrumbProps> = (props) => {
     <Breadcrumb className={styles.breadcrumb}>
       {list.map((item, index) => {
         const { path, name, component } = getCurrentRoute(routesFlat, item) || {};
+        if (!name) return null;
         return (
           <Breadcrumb.Item key={path || index}>
             {!!component && index !== list.length - 1 ? (

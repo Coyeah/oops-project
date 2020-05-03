@@ -25,6 +25,7 @@ module.exports = merge(common, {
     inline: true, // 实时刷新
     hot: true, // 热加载
     disableHostCheck: false, // 设置为 true 时，此选项绕过主机检查。不建议这样做，因为不检查主机的应用程序容易受到 DNS 重新连接攻击。
+    stats: 'errors-only', // 控制台打印日志
     proxy,
   },
   plugins: [

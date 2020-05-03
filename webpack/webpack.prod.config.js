@@ -33,6 +33,18 @@ module.exports = merge(common, {
       MOCK_ENV: JSON.stringify('online'),
       INITIAL_SITE_INFO: JSON.stringify(website),
     }),
+    function () {
+      this.hooks.done.tap('done', (stats) => {
+        if (
+          stats.compilation.errors &&
+          stats.compilation.errors.length &&
+          process.argv.indexOf('--watch') == -1
+        ) {
+          console.log('build error');
+          process.exit(1);
+        }
+      });
+    },
   ].filter(Boolean),
   optimization: {
     // webpack4 去掉了 CommonsChunkPlugin，取而代之为 optimization.splitChunks 和 optimization.runtimeChunk 这两个配置。
@@ -64,7 +76,9 @@ module.exports = merge(common, {
           preset: [
             'advanced',
             {
-              discardComments: { removeAll: true },
+              discardComments: {
+                removeAll: true,
+              },
               autoprefixer: true,
             },
           ],

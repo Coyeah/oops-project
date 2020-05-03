@@ -25,7 +25,12 @@
     "type": "git",
     "url": "git+https://github.com/Coyeah/oops-project.git"
   },
-  "keywords": ["react", "antd", "webpack", "mobx"],
+  "keywords": [
+    "react",
+    "antd",
+    "webpack",
+    "mobx"
+  ],
   "author": "Coyeah_chen@outlook.com",
   "license": "MIT",
   "bugs": {
@@ -81,6 +86,7 @@
     "eslint-plugin-react": "^7.19.0",
     "fetch-mock": "^9.4.0",
     "file-loader": "^6.0.0",
+    "friendly-errors-webpack-plugin": "^1.7.0",
     "happypack": "^5.0.1",
     "html-webpack-plugin": "^4.2.0",
     "html-webpack-tags-plugin": "^2.0.17",

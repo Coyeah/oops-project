@@ -7,6 +7,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin'); // 引入 html-webpack
 const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin'); // 用于直接复制公共的文件
 const HappyPack = require('happypack'); // Happypack 只是作用在 loader 上，使用多个进程同时对文件进行编译。
+var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const paths = require('./config/paths');
 const { USE_DLL } = require('./config/config');
 const website = require('./config/website');
@@ -182,6 +183,7 @@ module.exports = {
       }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), // IgnorePlugin 防止在 import 或 require 调用时，生成以下正则表达式匹配的模块
     new ProgressBarPlugin(),
+    new FriendlyErrorsWebpackPlugin(),
     new LodashModuleReplacementPlugin({
       paths: true,
     }),

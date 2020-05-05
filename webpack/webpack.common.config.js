@@ -6,13 +6,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin'); // 引入 html-webpack
 // const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin'); // 用于添加js或css文件路径（例如那些被copy-webpack-plugin插件编译的文件）
 const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin'); // 用于直接复制公共的文件
-const HappyPack = require('happypack'); // Happypack 只是作用在 loader 上，使用多个进程同时对文件进行编译。
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const paths = require('./config/paths');
 const { USE_DLL } = require('./config/config');
 const website = require('./config/website');
 const modifyVars = require('./config/theme');
 const regexp = require('./config/regexp');
+const getThreadLoader = require('./tools/getThreadLoader');
 const getStyleLoader = require('./tools/getStyleLoader');
 const getDllReferPlugins = require('./tools/getDllReferPlugins');
 const dllConfig = require('./webpack.dll.config');
@@ -74,12 +74,12 @@ module.exports = {
           {
             test: regexp.REGEXP_SCRIPT,
             exclude: /node_modules/,
-            use: ['happypack/loader'],
+            use: [getThreadLoader(), 'babel-loader'],
           },
           {
             test: regexp.REGEXP_TYPESCRIPT,
             exclude: /node_modules/,
-            use: ['happypack/loader'],
+            use: [getThreadLoader(), 'babel-loader'],
           },
           {
             test: regexp.REGEXP_CSS,
@@ -197,9 +197,6 @@ module.exports = {
         },
       ].filter(Boolean),
     ),
-    new HappyPack({
-      loaders: ['babel-loader'],
-    }),
     ...getDllReferPlugins(dllConfig.entry),
   ].filter(Boolean),
   node: {

@@ -1,7 +1,5 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
-const glob = require('glob');
-const PurgecssPlugin = require('purgecss-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // 将CSS提取到单独的文件中。它为每个包含CSS的JS文件创建一个CSS文件。
@@ -26,11 +24,6 @@ module.exports = smp.wrap(
       new MiniCssExtractPlugin({
         filename: `css/[name].[contenthash].${website.name}.css`,
         chunkFilename: `css/[id].[contenthash].${website.name}.css`,
-      }),
-      new PurgecssPlugin({
-        paths: glob.sync(`${paths.appSrc}/**/*`, {
-          nodir: true,
-        }),
       }),
       new CleanWebpackPlugin({
         root: paths.appRoot, // 绝对路径，就是要根据这个 root 去找要删除的文件夹，默认是这个 webpack 配置文件所在额

@@ -1,13 +1,17 @@
 const webpack = require('webpack');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
+const CopyWebpackPlugin = require('copy-webpack-plugin'); // 用于直接复制公共的文件
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 const common = require('./webpack.common.config');
 const paths = require('./config/paths');
 const { proxy, PORT, MOCK_ENV } = require('../config/proxy.config');
+const { USE_DLL_DEV } = require('./config/config');
 const website = require('./config/website');
 
 module.exports = merge(common, {
   mode: 'development',
-  devtool: 'eval-source-map', // 选择一种 source map 格式来增强调试过程。不同的值会明显影响到构建(build)和重新构建(rebuild)的速度。
+  devtool: 'devtool: cheap-module-eval-source-map', // 选择一种 source map 格式来增强调试过程。不同的值会明显影响到构建(build)和重新构建(rebuild)的速度。
   devServer: {
     compress: true, // 开发服务器是否启动gzip等压缩
     clientLogLevel: 'none',
@@ -32,10 +36,20 @@ module.exports = merge(common, {
     new webpack.HotModuleReplacementPlugin(), // Hot Module Replacement 的插件
     new webpack.NamedModulesPlugin(), // 用于启动 HMR 时可以显示模块的相对路径
     new webpack.DefinePlugin({
-      INITIAL_SITE_INFO: JSON.stringify(website),
+      // PORT: JSON.stringify(PORT),
       MOCK_ENV: JSON.stringify(MOCK_ENV),
     }),
-  ],
+    USE_DLL_DEV &&
+      new HtmlWebpackTagsPlugin({
+        tags: ['react', 'reactDOM'].map((name) => `${name}.${website.name}.dll.js`),
+        append: false,
+      }),
+    USE_DLL_DEV &&
+      new CopyWebpackPlugin({
+        patterns: [paths.appDll],
+      }),
+    !USE_DLL_DEV && new HardSourceWebpackPlugin(),
+  ].filter(Boolean),
   optimization: {
     runtimeChunk: true,
   },

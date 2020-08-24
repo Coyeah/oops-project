@@ -10,10 +10,10 @@ module.exports = {
   PUBLIC_PATH: '/',
   appRoot: resolveApp('.'),
   appSrc: resolveApp('src'),
-  appIndex: resolveApp('src/index'),
+  appIndex: resolveApp('src/App'),
   appDist: resolveApp('dist'),
-  appEjs: resolveApp('src/index.ejs'),
+  appEjs: resolveApp('src/document.ejs'),
   appPublic: resolveApp('public'),
   appDll: resolveApp('dll'),
-  appAnalysis: resolveApp('analysis'),
+  appAnalysis: resolveApp('analysis')
 };

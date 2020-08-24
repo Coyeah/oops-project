@@ -3,16 +3,14 @@ const webpack = require('webpack');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin'); // webpack 编译时显示加载条
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin'); // lodash 按需加载插件
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // 引入 html-webpack-plugin 插件,作用是添加模板到编译完成后的 dist 的文件里面，用于生成 html。
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 // const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin'); // 用于添加js或css文件路径（例如那些被copy-webpack-plugin插件编译的文件）
-const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin'); // 用于直接复制公共的文件
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const paths = require('./config/paths');
-const { USE_DLL } = require('./config/config');
 const website = require('./config/website');
 const modifyVars = require('./config/theme');
 const regexp = require('./config/regexp');
-const getThreadLoader = require('./tools/getThreadLoader');
 const getStyleLoader = require('./tools/getStyleLoader');
 const getDllReferPlugins = require('./tools/getDllReferPlugins');
 const dllConfig = require('./webpack.dll.config');
@@ -22,7 +20,10 @@ const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
   context: paths.appRoot,
-  entry: ['@babel/polyfill', paths.appIndex],
+  entry: {
+    'main.modern': paths.appIndex,
+    // 'main.legacy': paths.appIndex,
+  },
   output: {
     publicPath: paths.PUBLIC_PATH,
     path: paths.appDist,
@@ -74,12 +75,40 @@ module.exports = {
           {
             test: regexp.REGEXP_SCRIPT,
             exclude: /node_modules/,
-            use: [getThreadLoader(), 'babel-loader'],
+            use: [
+              {
+                loader: 'thread-loader',
+                options: {
+                  workers: 2,
+                  poolTimeout: 2000,
+                },
+              },
+              {
+                loader: 'babel-loader',
+                options: {
+                  cacheDirectory: true,
+                },
+              },
+            ],
           },
           {
             test: regexp.REGEXP_TYPESCRIPT,
             exclude: /node_modules/,
-            use: [getThreadLoader(), 'babel-loader'],
+            use: [
+              {
+                loader: 'thread-loader',
+                options: {
+                  workers: 2,
+                  poolTimeout: 2000,
+                },
+              },
+              {
+                loader: 'babel-loader',
+                options: {
+                  cacheDirectory: true,
+                },
+              },
+            ],
           },
           {
             test: regexp.REGEXP_CSS,
@@ -141,7 +170,12 @@ module.exports = {
           //   sideEffects: true,
           // },
           {
-            exclude: [/\.(js|jsx)$/, /\.(html|ejs)$/, /\.(css|less)$/, /\.json$/],
+            exclude: [
+              /\.(js|jsx)$/,
+              /\.(html|ejs)$/,
+              /\.(css|less)$/,
+              /\.json$/,
+            ],
             include: paths.appSrc,
             use: [
               {
@@ -162,6 +196,7 @@ module.exports = {
       filename: 'index.html',
       inject: true,
       template: paths.appEjs, // 本地模板文件的位置，支持加载器（如 handlebars、ejs、undersore、html 等）
+      scriptLoading: 'defer', // 现代浏览器支持非阻塞javascript加载（'defer'），以提高页面启动性能。
       minify: {
         // 用于压缩 html 的配置
         removeComments: true,
@@ -176,27 +211,24 @@ module.exports = {
         minifyJs: true, // 压缩 html 中出现的 js 代码
       },
     }),
-    USE_DLL &&
-      new HtmlWebpackTagsPlugin({
-        tags: ['react', 'reactDOM'].map((name) => `${name}.${website.name}.dll.js`),
-        append: false,
-      }),
+    // new ScriptExtHtmlWebpackPlugin({
+    //   module: [/main\.modern/],
+    //   custom: [
+    //     {
+    //       test: /main\.legacy/,
+    //       attribute: 'nomodule',
+    //     },
+    //   ],
+    // }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), // IgnorePlugin 防止在 import 或 require 调用时，生成以下正则表达式匹配的模块
     new ProgressBarPlugin(),
-    new FriendlyErrorsWebpackPlugin(),
     new LodashModuleReplacementPlugin({
       paths: true,
     }),
-    new CopyWebpackPlugin(
-      [
-        {
-          from: paths.appPublic,
-        },
-        USE_DLL && {
-          from: paths.appDll,
-        },
-      ].filter(Boolean),
-    ),
+    new CopyWebpackPlugin({
+      patterns: [paths.appPublic],
+    }),
+    new FriendlyErrorsWebpackPlugin(),
     ...getDllReferPlugins(dllConfig.entry),
   ].filter(Boolean),
   node: {

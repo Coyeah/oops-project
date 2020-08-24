@@ -14,4 +14,4 @@ module.exports = {
   REGEXP_CSS_MODULE,
   REGEXP_LESS,
   REGEXP_LESS_MODULE,
-};
+}

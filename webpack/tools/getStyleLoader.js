@@ -1,3 +1,4 @@
+const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // 将CSS提取到单独的文件中。它为每个包含CSS的JS文件创建一个CSS文件。
 
 const getStyleLoader = ({
@@ -19,9 +20,10 @@ const getStyleLoader = ({
     {
       loader: 'css-loader',
       options: {
-        modules,
+        modules: modules && {
+          localIdentName: isProd ? '[hash:base64]' : '[path][name]__[local]',
+        },
         sourceMap,
-        // localIdentName: "[path][name]__[local]--[hash:base64:5]",  // Configure the generated ident
         importLoaders: useLess ? 2 : 1, // Number of loaders applied before CSS loader
       },
     },
@@ -34,9 +36,18 @@ const getStyleLoader = ({
     useLess && {
       loader: require.resolve('less-loader'), // compiles Less to CSS
       options: {
-        javascriptEnabled: true,
+        lessOptions: {
+          javascriptEnabled: true,
+        },
+        appendData: (loaderContext) => {
+          // More information about available properties https://webpack.js.org/api/loaders/
+          let rst = '';
+          Object.keys(modifyVars).map((key) => {
+            rst += `${key}:${modifyVars[key]};`;
+          });
+          return rst;
+        },
         sourceMap,
-        modifyVars,
       },
     },
   ].filter(Boolean);

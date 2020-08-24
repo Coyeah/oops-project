@@ -1,16 +1,17 @@
 # oops-project
 
-感谢使用 oops-project。这是一个自建的前端脚手架，图好玩和练习搭建起来的，在使用过程中慢慢迭代和更新。
+## commit 规范
 
-可以通过 `oops-cli` 进行初始化。
-
-```shell
-# npm install -g oops-cli
-```
-
-👏希望 star 给予支持！
-
-+ `/config` 配置路由、代理、网站、主题等数据信息
-+ `/webpack` webpack 配置数据
-
-***有待完善***
+| 类型 | 描述 |
+| -------- | ----- |
+| build | 发布版本 |
+| chore | 改变构建流程、或者增加依赖库、工具等 |
+| ci | 持续集成修改 |
+| docs | 文档修改 |
+| feat | 新特性 |
+| fix | 修改问题 |
+| perf | 优化相关，比如提升性能、体验 |
+| refactor | 代码重构 |
+| revert | 回滚到上一个版本 |
+| style | 代码格式修改 |
+| test | 测试用例修改 |

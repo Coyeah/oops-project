@@ -1,21 +1,23 @@
 const webpack = require('webpack');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // 将CSS提取到单独的文件中。它为每个包含CSS的JS文件创建一个CSS文件。
 const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // 引入clean-webpack-plugin插件，作用是清除 dist 文件及下的内容，因为每次编译完成后都会有一个 dist 文件夹存放静态文件，所以需要清除上次的 dist 文件
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const CopyWebpackPlugin = require('copy-webpack-plugin'); // 用于直接复制公共的文件
+const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 const common = require('./webpack.common.config.js');
-const config = require('./config/config');
+const { USE_DLL_PROD } = require('./config/config');
 const website = require('./config/website');
 const paths = require('./config/paths');
 
-const { USE_DLL } = config;
 const IS_ANALYSIS = process.argv.includes('--analysis');
 
 module.exports = merge(common, {
   mode: 'production',
-  devtool: 'source-map',
+  // devtool: 'source-map',
+  devtool: 'hidden-source-map',
   plugins: [
     new MiniCssExtractPlugin({
       filename: `css/[name].[contenthash].${website.name}.css`,
@@ -26,25 +28,21 @@ module.exports = merge(common, {
       verbose: true, // 控制台打印日志
       dry: false, // 为 false 是删除文件夹的
       watch: true, // 在编译的时候删除打包文件就是在 npm start 或者 npm run dev，等跑本地服务的时候，删除之前的打包文件
-      exclude: USE_DLL ? ['dll'] : [], // 排除不删除的目录，主要用于避免删除公用的文件
+      exclude: USE_DLL_PROD ? ['dll'] : [], // 排除不删除的目录，主要用于避免删除公用的文件
     }),
     IS_ANALYSIS && new BundleAnalyzerPlugin(),
     new webpack.DefinePlugin({
       MOCK_ENV: JSON.stringify('online'),
-      INITIAL_SITE_INFO: JSON.stringify(website),
     }),
-    function () {
-      this.hooks.done.tap('done', (stats) => {
-        if (
-          stats.compilation.errors &&
-          stats.compilation.errors.length &&
-          process.argv.indexOf('--watch') == -1
-        ) {
-          console.log('build error');
-          process.exit(1);
-        }
-      });
-    },
+    USE_DLL_PROD &&
+      new HtmlWebpackTagsPlugin({
+        tags: ['react', 'reactDOM'].map((name) => `${name}.${website.name}.dll.js`),
+        append: false,
+      }),
+    USE_DLL_PROD &&
+      new CopyWebpackPlugin({
+        patterns: [paths.appDll],
+      }),
   ].filter(Boolean),
   optimization: {
     // webpack4 去掉了 CommonsChunkPlugin，取而代之为 optimization.splitChunks 和 optimization.runtimeChunk 这两个配置。

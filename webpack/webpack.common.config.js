@@ -74,7 +74,7 @@ module.exports = {
           },
           {
             test: regexp.REGEXP_SCRIPT,
-            exclude: /node_modules/,
+            exclude: paths.appNodeModules,
             use: [
               {
                 loader: 'thread-loader',
@@ -93,7 +93,7 @@ module.exports = {
           },
           {
             test: regexp.REGEXP_TYPESCRIPT,
-            exclude: /node_modules/,
+            exclude: paths.appNodeModules,
             use: [
               {
                 loader: 'thread-loader',
@@ -135,7 +135,7 @@ module.exports = {
           {
             // 解决 antd less 模块化的兼容问题
             test: regexp.REGEXP_LESS,
-            exclude: /node_modules/,
+            exclude: paths.appNodeModules,
             use: getStyleLoader({
               isProd,
               sourceMap: OPEN_SOURCE_MAP,

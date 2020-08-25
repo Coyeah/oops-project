@@ -12,6 +12,7 @@ module.exports = {
   appSrc: resolveApp('src'),
   appIndex: resolveApp('src/App'),
   appDist: resolveApp('dist'),
+  appNodeModules: resolveApp('node_modules'),
   appEjs: resolveApp('src/document.ejs'),
   appPublic: resolveApp('public'),
   appDll: resolveApp('dll'),

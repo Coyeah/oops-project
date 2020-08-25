@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 
 const config = require('../config/config');
-const website = require('../config/website');
+const website = require('../../config/website.config');
 const paths = require('../config/paths');
 
 const getDllReferPlugins = entries => {

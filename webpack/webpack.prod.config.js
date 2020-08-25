@@ -9,7 +9,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin'); // 用于直接复制�
 const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 const common = require('./webpack.common.config.js');
 const { USE_DLL_PROD } = require('./config/config');
-const website = require('./config/website');
+const website = require('../config/website.config');
 const paths = require('./config/paths');
 
 const IS_ANALYSIS = process.argv.includes('--analysis');

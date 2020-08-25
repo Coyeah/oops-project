@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const paths = require('./config/paths');
-const website = require('./config/website');
+const website = require('../config/website.config');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // 引入clean-webpack-plugin插件，作用是清除 dist 文件及下的内容，因为每次编译完成后都会有一个 dist 文件夹存放静态文件，所以需要清除上次的 dist 文件
 
 module.exports = {

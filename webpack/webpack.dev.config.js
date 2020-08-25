@@ -7,7 +7,7 @@ const common = require('./webpack.common.config');
 const paths = require('./config/paths');
 const { proxy, PORT, MOCK_ENV } = require('../config/proxy.config');
 const { USE_DLL_DEV } = require('./config/config');
-const website = require('./config/website');
+const website = require('../config/website.config');
 
 module.exports = merge(common, {
   mode: 'development',

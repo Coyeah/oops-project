@@ -4,14 +4,16 @@ import moment from 'moment';
 import 'moment/locale/zh-cn';
 import './App.less';
 
+moment.locale('zh-cn');
+
 // if (MOCK_ENV === 'local') {
 //   require('../mock/index');
 // }
 
-moment.locale('zh-cn');
-
-const App: React.FC = () => (
-  <div className="app">Hello World!</div>
-);
+const App: React.FC = () => {
+  return (
+    <div className="app">Hello World!</div>
+  )
+}
 
 render(<App />, document.getElementById('root'));

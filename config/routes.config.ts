@@ -27,7 +27,7 @@ export interface RouteItemType {
 
 function _routesFormat(
   routes: Array<RouteItemType>,
-  parentAuthority?: RouteItemType['authority'],
+  parentAuthority?: Array<AuthorityType>,
   parentName?: string,
   parentDefaultLayouts?: RouteItemType['layouts']
 ): Array<RouteItemType> {
@@ -67,8 +67,8 @@ function _routesFormat(
     }
 
     if (
-      result.exact && 
-      !result.layouts && 
+      result.exact &&
+      !result.layouts &&
       result.defaultLayouts
     ) {
       result.layouts = result.defaultLayouts;

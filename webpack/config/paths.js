@@ -11,7 +11,7 @@ module.exports = {
   PUBLIC_PATH: '/',
   appRoot: resolveApp('.'),
   appSrc: resolveApp('src'),
-  appIndex: resolveApp('src/App'),
+  appIndex: resolveApp('src/index'),
   appDist: resolveApp('dist'),
   appNodeModules: resolveApp('node_modules'),
   appEjs: resolveApp('src/document.ejs'),

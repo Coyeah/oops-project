@@ -10,13 +10,22 @@
     "dev": "cross-env NODE_ENV=development webpack-dev-server --mode=development --config=webpack/webpack.dev.config.js",
     "analysis": "cross-env NODE_ENV=production webpack --config webpack/webpack.prod.config.js --analysis",
     "start": "npm run dev",
-    "start:dev": "cross-env MOCK_ENV=dev npm run dev",
-    "start:qa": "cross-env MOCK_ENV=qa npm run dev",
-    "start:pl": "cross-env MOCK_ENV=pl npm run dev",
     "build": "npm run dll && npm run prod",
     "prettier": "node ./scripts/prettier.js",
     "lint-staged": "lint-staged",
     "precommit": "npm run lint-staged"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged --ignore-path=.prettierignore",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,ts,tsx,json,jsx,less}": [
+      "node ./scripts/prettier.js",
+      "git add ."
+    ]
   },
   "repository": {
     "type": "git",

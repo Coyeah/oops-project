@@ -12,8 +12,6 @@ const modifyVars = require('../config/theme.config');
 const paths = require('./config/paths');
 const regexp = require('./config/regexp');
 const getStyleLoader = require('./tools/getStyleLoader');
-const getDllReferPlugins = require('./tools/getDllReferPlugins');
-const dllConfig = require('./webpack.dll.config');
 
 const OPEN_SOURCE_MAP = true;
 const isProd = process.env.NODE_ENV === 'production';
@@ -229,7 +227,6 @@ module.exports = {
       patterns: [paths.appPublic],
     }),
     new FriendlyErrorsWebpackPlugin(),
-    ...getDllReferPlugins(dllConfig.entry),
   ].filter(Boolean),
   node: {
     dgram: 'empty',

@@ -8,9 +8,11 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const CopyWebpackPlugin = require('copy-webpack-plugin'); // 用于直接复制公共的文件
 const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 const common = require('./webpack.common.config.js');
-const { USE_DLL_PROD } = require('./config/config');
+const { USE_DLL_PROD } = require('../config/bundle.config');
 const website = require('../config/website.config');
 const paths = require('./config/paths');
+const getDllReferPlugins = require('./tools/getDllReferPlugins');
+const dllConfig = require('./webpack.dll.config');
 
 const IS_ANALYSIS = process.argv.includes('--analysis');
 
@@ -36,13 +38,16 @@ module.exports = merge(common, {
     }),
     USE_DLL_PROD &&
       new HtmlWebpackTagsPlugin({
-        tags: ['react', 'reactDOM'].map((name) => `${name}.${website.name}.dll.js`),
+        tags: ['react', 'reactDOM'].map(
+          (name) => `${name}.${website.name}.dll.js`,
+        ),
         append: false,
       }),
     USE_DLL_PROD &&
       new CopyWebpackPlugin({
         patterns: [paths.appDll],
       }),
+    ...getDllReferPlugins(dllConfig.entry, USE_DLL_PROD),
   ].filter(Boolean),
   optimization: {
     // webpack4 去掉了 CommonsChunkPlugin，取而代之为 optimization.splitChunks 和 optimization.runtimeChunk 这两个配置。

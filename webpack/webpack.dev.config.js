@@ -6,8 +6,10 @@ const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 const common = require('./webpack.common.config');
 const paths = require('./config/paths');
 const { proxy, PORT, MOCK_ENV } = require('../config/proxy.config');
-const { USE_DLL_DEV } = require('./config/config');
+const { USE_DLL_DEV } = require('../config/bundle.config');
 const website = require('../config/website.config');
+const getDllReferPlugins = require('./tools/getDllReferPlugins');
+const dllConfig = require('./webpack.dll.config');
 
 module.exports = merge(common, {
   mode: 'development',
@@ -41,7 +43,9 @@ module.exports = merge(common, {
     }),
     USE_DLL_DEV &&
       new HtmlWebpackTagsPlugin({
-        tags: ['react', 'reactDOM'].map((name) => `${name}.${website.name}.dll.js`),
+        tags: ['react', 'reactDOM'].map(
+          (name) => `${name}.${website.name}.dll.js`,
+        ),
         append: false,
       }),
     USE_DLL_DEV &&
@@ -49,6 +53,7 @@ module.exports = merge(common, {
         patterns: [paths.appDll],
       }),
     !USE_DLL_DEV && new HardSourceWebpackPlugin(),
+    ...getDllReferPlugins(dllConfig.entry, USE_DLL_DEV),
   ].filter(Boolean),
   optimization: {
     runtimeChunk: true,

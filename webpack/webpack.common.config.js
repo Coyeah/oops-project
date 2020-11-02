@@ -4,7 +4,6 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin'); // webpack 编
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin'); // lodash 按需加载插件
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // 引入 html-webpack-plugin 插件,作用是添加模板到编译完成后的 dist 的文件里面，用于生成 html。
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
-// const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin'); // 用于添加js或css文件路径（例如那些被copy-webpack-plugin插件编译的文件）
 const CopyWebpackPlugin = require('copy-webpack-plugin'); // 用于直接复制公共的文件
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const website = require('../config/website.config');
@@ -25,8 +24,12 @@ module.exports = {
   output: {
     publicPath: paths.PUBLIC_PATH,
     path: paths.appDist,
-    filename: `[name].[hash:8].${website.name}.js`,
-    chunkFilename: `[name].[hash:8].${website.name}.js`,
+    filename: `[name].[${isProd ? 'chunkhash' : 'hash'}:8].${
+      website.name
+    }.js`,
+    chunkFilename: `[name].[${isProd ? 'chunkhash' : 'hash'}:8].${
+      website.name
+    }.js`,
   },
   resolve: {
     alias: {
@@ -190,7 +193,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: `${website.title}`, // 配置生成的 html 的 title，不会主动替换，需要通过模板引擎语法获取来配置
+      title: `${(!isProd && '[DEV]') || ''}${website.title}`, // 配置生成的 html 的 title，不会主动替换，需要通过模板引擎语法获取来配置
       filename: 'index.html',
       inject: true,
       template: paths.appEjs, // 本地模板文件的位置，支持加载器（如 handlebars、ejs、undersore、html 等）

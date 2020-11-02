@@ -1,0 +1,40 @@
+.app {
+  min-height: 100%;
+}
+
+.header {
+  background-color: #fff;
+  padding: 0px;
+  display: flex;
+
+  &-collapsed {
+    font-size: 14px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+}
+
+.sider {
+  color: #fff;
+  overflow-x: hidden;
+
+  &-header {
+    min-width: 200px;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.05);
+
+    &-icon {
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      margin-right: 20px;
+      height: 40px;
+      width: 40px;
+    }
+  }
+}

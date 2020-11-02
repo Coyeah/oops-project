@@ -1,4 +1,4 @@
 module.exports = {
   name: 'oops-project', // en
-  title: 'oops-project'
-}
+  title: 'Oops',
+};
